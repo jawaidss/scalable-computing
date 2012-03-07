@@ -2,37 +2,31 @@
 
 == Install Node.js ==
 
-{{{ sudo apt-get install python-software-properties }}}
-
-{{{ sudo add-apt-repository ppa:chris-lea/node.js }}}
-
-{{{ sudo apt-get update }}}
-
-{{{ sudo apt-get install nodejs }}}
+# {{{ sudo apt-get install python-software-properties }}}
+# {{{ sudo add-apt-repository ppa:chris-lea/node.js }}}
+# {{{ sudo apt-get update }}}
+# {{{ sudo apt-get install nodejs }}}
 
 Without the first three commands, a very old version may be installed.
 
 == Install MongoDB ==
 
-{{{ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10 }}}
-
-{{{ echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" | sudo tee -a /etc/apt/sources.list }}}
-
-{{{ sudo apt-get update }}}
-
-{{{ sudo apt-get install mongodb-10gen }}}
+# {{{ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10 }}}
+# {{{ echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" | sudo tee -a /etc/apt/sources.list }}}
+# {{{ sudo apt-get update }}}
+# {{{ sudo apt-get install mongodb-10gen }}}
 
 With just {{{ sudo apt-get install mongodb }}}, an old version may be installed.
 
 == Install npm ==
 
-{{{ sudo apt-get install curl }}}
-{{{ curl http://npmjs.org/install.sh | sudo sh }}}
+# {{{ sudo apt-get install curl }}}
+# {{{ curl http://npmjs.org/install.sh | sudo sh }}}
 
 It is advised not to install npm as root. Why?
 
 == Install Express and Mongoose ==
 
-{{{ sudo npm install express mongoose -g }}}
+# {{{ sudo npm install express mongoose -g }}}
 
 It is advised not to install Mongoose globally. Why? (Express should be installed globally because it has an executable.)
