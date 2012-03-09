@@ -30,3 +30,50 @@ It is advised not to install npm as root. Why?
 # {{{ sudo npm install express mongoose -g }}}
 
 It is advised not to install Mongoose globally. Why? (Express should be installed globally because it has an executable.)
+
+== Hello, World ==
+
+# {{{ express HelloWorld }}}
+# {{{ cd HelloWorld && npm install }}}
+# {{{ echo node_modules > .gitignore }}}
+
+=== app.js ===
+
+# Add {{{ mongoose = require('mongoose') }}} to ** Module dependencies **
+# Connect to the database by adding {{{ mongoose.connect('mongodb://localhost/hello_world'); }}}
+# Create a user model by adding {{{
+var User = mongoose.model('User', new mongoose.Schema({
+  username: String
+}));
+}}}
+# Create a user instance by adding {{{
+User.count(function(err, c) {
+  if (c == 0) {
+    var user = new User();
+    user.username = 'jawaidss';
+    user.save()
+  }
+});
+}}}
+
+=== index.js ===
+
+# Add {{{ mongoose = require('mongoose') }}} to ** Module dependencies **
+# Connect to the database by adding {{{ mongoose.connect('mongodb://localhost/hello_world'); }}}
+# Modify {{{ exports.index }}} with {{{
+  var User = mongoose.model('User');
+  User.find(function(err, users) {
+    res.render('index', { title: 'Express', users: users });
+  });
+}}}
+
+=== index.jade ===
+
+# Add {{{
+each user in users
+  p #{user.username}
+}}}
+
+# {{{ npm install mongoose }}} Why does Mongoose have to be installed locally even though it is installed globally?
+# {{{ node app.js }}}
+# [[ http://localhost:3000/ ]]
