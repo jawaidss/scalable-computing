@@ -59,7 +59,7 @@ User.count(function(err, c) {
 });
 }}}
 
-=== index.js ===
+=== routes/index.js ===
 
 # Add {{{ mongoose = require('mongoose') }}} to ** Module dependencies **
 # Connect to the database by adding {{{ mongoose.connect('mongodb://localhost/hello_world'); }}}
@@ -71,7 +71,7 @@ User.count(function(err, c) {
   });
 }}}
 
-=== index.jade ===
+=== views/index.jade ===
 
 # Add
 {{{
