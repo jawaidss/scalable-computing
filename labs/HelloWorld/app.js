@@ -4,24 +4,9 @@
  */
 
 var express = require('express')
-  , routes = require('./routes')
-  , mongoose = require('mongoose');
+  , routes = require('./routes');
 
 var app = module.exports = express.createServer();
-
-mongoose.connect('mongodb://localhost/hello_world');
-
-var User = mongoose.model('User', new mongoose.Schema({
-  username: String
-}));
-
-User.count(function(err, c) {
-  if (c == 0) {
-    var user = new User();
-    user.username = 'jawaidss';
-    user.save()
-  }
-});
 
 // Configuration
 

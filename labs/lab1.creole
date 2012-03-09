@@ -38,18 +38,30 @@ It is advised not to install Mongoose globally. Why? (Express should be installe
 # {{{ npm install mongoose }}} Why does Mongoose have to be installed locally even though it is installed globally?
 # {{{ echo node_modules > .gitignore }}}
 
-=== app.js ===
+=== models.js ===
 
-# Add {{{ mongoose = require('mongoose') }}} to ** Module dependencies **
-# Connect to the database by adding {{{ mongoose.connect('mongodb://localhost/hello_world'); }}}
-# Create a user model by adding
+# Import mongoose
+# Connect to the database
+# Create a user schema
+# Create a user model
+# Create a user instance, if none exist
+# Export the user model
+
 {{{
-var User = mongoose.model('User', new mongoose.Schema({
+/**
+ * Module dependencies.
+ */
+
+mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/hello_world');
+
+var UserSchema = new mongoose.Schema({
   username: String
-}));
-}}}
-# Create a user instance by adding
-{{{
+})
+
+var User = mongoose.model('User', UserSchema);
+
 User.count(function(err, c) {
   if (c == 0) {
     var user = new User();
@@ -57,15 +69,15 @@ User.count(function(err, c) {
     user.save()
   }
 });
+
+exports.User = User;
 }}}
 
 === routes/index.js ===
 
-# Add {{{ mongoose = require('mongoose') }}} to ** Module dependencies **
-# Connect to the database by adding {{{ mongoose.connect('mongodb://localhost/hello_world'); }}}
-# Modify {{{ exports.index }}} with
+# Import the user model with {{{ var User = require('../models').User; }}}
+# Replace {{{ res.render('index', { title: 'Express' }) }}} with
 {{{
-  var User = mongoose.model('User');
   User.find(function(err, users) {
     res.render('index', { title: 'Express', users: users });
   });
