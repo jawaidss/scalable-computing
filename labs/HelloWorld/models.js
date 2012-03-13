@@ -11,10 +11,11 @@ var TWITTER_CONSUMER_SECRET = require('./settings.js').TWITTER_CONSUMER_SECRET;
 
 mongoose.connect('mongodb://localhost/hello_world');
 
-var UserSchema = new mongoose.Schema({
-  username: String
+var StatusSchema = new mongoose.Schema({
+  message: String
 });
 
+var UserSchema = new mongoose.Schema();
 UserSchema.plugin(mongooseAuth, {
   everymodule: {
     everyauth: {
@@ -33,14 +34,15 @@ UserSchema.plugin(mongooseAuth, {
   }
 });
 
+var Status = mongoose.model('Status', StatusSchema);
 var User = mongoose.model('User', UserSchema);
 
-User.count(function(err, c) {
+Status.count(function(err, c) {
   if (c == 0) {
-    var user = new User();
-    user.username = 'jawaidss';
-    user.save()
+    var status = new Status();
+    status.message = 'Hello, World';
+    status.save()
   }
 });
 
-exports.User = User;
+exports.Status = Status;

@@ -1,16 +1,19 @@
 h1= title
 p Welcome to #{title}
 
-each user in users
-  p #{user.username}
+h2 Statuses
+each status in statuses
+  p #{status.message}
 
-form(method="post", action="/users")
+h2 Create status
+form(method="post", action="/statuses")
   div
-    label Username:
-    input(name="username")
+    label Message:
+    input(name="message")
   div
-    input(type="submit", value="Create user")
+    input(type="submit", value="Create status")
 
+h2 Authentication
 - if (!everyauth.loggedIn)
   p
     a(href="/auth/twitter") Log in with Twitter

@@ -1,12 +1,12 @@
 = Lab 2 =
 
-== User Creation ==
+== Status Creation ==
 
 === app.js ===
 
 * Under {{{ // Routes }}}, add
 {{{
-app.post('/users', routes.create_user);
+app.post('/statuses', routes.create_status);
 }}}
 
 === routes/index.js ===
@@ -14,13 +14,13 @@ app.post('/users', routes.create_user);
 * Add
 {{{
 /*
- * POST create user.
+ * POST create status.
  */
 
-exports.create_user = function(req, res){
-  var user = new User();
-  user.username = req.body.username;
-  user.save()
+exports.create_status = function(req, res){
+  var status = new Status();
+  status.message = req.body.message;
+  status.save()
   res.redirect('back');
 };
 }}}
@@ -29,12 +29,13 @@ exports.create_user = function(req, res){
 
 * Add
 {{{
-form(method="post", action="/users")
+h2 Create status
+form(method="post", action="/statuses")
   div
-    label Username:
-    input(name="username")
+    label Message:
+    input(name="message")
   div
-    input(type="submit", value="Create user")
+    input(type="submit", value="Create status")
 }}}
 
 === Try it out ===

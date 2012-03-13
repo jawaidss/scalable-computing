@@ -47,6 +47,7 @@ var mongooseAuth = require('mongoose-auth');
 var TWITTER_CONSUMER_KEY = require('./settings.js').TWITTER_CONSUMER_KEY;
 var TWITTER_CONSUMER_SECRET = require('./settings.js').TWITTER_CONSUMER_SECRET;
 
+var UserSchema = new mongoose.Schema();
 UserSchema.plugin(mongooseAuth, {
   everymodule: {
     everyauth: {
@@ -64,12 +65,15 @@ UserSchema.plugin(mongooseAuth, {
     }
   }
 });
+
+var User = mongoose.model('User', UserSchema);
 }}}
 
 === views/index.jade ===
 
 * Add
 {{{
+h2 Authentication
 - if (!everyauth.loggedIn)
   p
     a(href="/auth/twitter") Log in with Twitter

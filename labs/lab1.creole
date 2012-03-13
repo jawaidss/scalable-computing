@@ -42,10 +42,10 @@ It is advised not to install Mongoose globally. Why? (Express should be installe
 
 # Import mongoose
 # Connect to the database
-# Create a user schema
-# Create a user model
-# Create a user instance, if none exist
-# Export the user model
+# Create a status schema
+# Create a status model
+# Create a status instance, if none exist
+# Export the status model
 
 {{{
 /**
@@ -56,30 +56,30 @@ var mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/hello_world');
 
-var UserSchema = new mongoose.Schema({
-  username: String
+var StatusSchema = new mongoose.Schema({
+  message: String
 });
 
-var User = mongoose.model('User', UserSchema);
+var Status = mongoose.model('Status', StatusSchema);
 
-User.count(function(err, c) {
+Status.count(function(err, c) {
   if (c == 0) {
-    var user = new User();
-    user.username = 'jawaidss';
-    user.save()
+    var status = new Status();
+    status.message = 'Hello, World';
+    status.save()
   }
 });
 
-exports.User = User;
+exports.Status = Status;
 }}}
 
 === routes/index.js ===
 
-# Import the user model with {{{ var User = require('../models').User; }}}
+# Import the status model with {{{ var Status = require('../models').Status; }}}
 # Replace {{{ res.render('index', { title: 'Express' }) }}} with
 {{{
-  User.find(function(err, users) {
-    res.render('index', { title: 'Express', users: users });
+  Status.find(function(err, statuses) {
+    res.render('index', { title: 'Express', statuses: statuses });
   });
 }}}
 
@@ -87,8 +87,9 @@ exports.User = User;
 
 # Add
 {{{
-each user in users
-  p #{user.username}
+h2 Statuses
+each status in statuses
+  p #{status.message}
 }}}
 
 === Try it out ===

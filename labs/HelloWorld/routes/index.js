@@ -1,22 +1,22 @@
-var User = require('../models').User;
+var Status = require('../models').Status;
 
 /*
  * GET home page.
  */
 
 exports.index = function(req, res){
-  User.find(function(err, users) {
-    res.render('index', { title: 'Express', users: users });
+  Status.find(function(err, statuses) {
+    res.render('index', { title: 'Express', statuses: statuses });
   });
 };
 
 /*
- * POST create user.
+ * POST create status.
  */
 
-exports.create_user = function(req, res){
-  var user = new User();
-  user.username = req.body.username;
-  user.save()
+exports.create_status = function(req, res){
+  var status = new Status();
+  status.message = req.body.message;
+  status.save()
   res.redirect('back');
 };
