@@ -1,0 +1,88 @@
+= Lab 3 =
+
+== User Authentication with Twitter ==
+
+# {{{ npm install mongoose-auth }}}
+# In case of error involving {{{ node-waf }}}, {{{ sudo apt-get install nodejs-dev }}} and try again
+# Add {{{ 127.0.0.1	localhost	local.host }}} to {{{ /etc/hosts }}}
+# [[ https://dev.twitter.com/apps ]]
+|=Access    |=Callback URL                                 |
+| Read only | http://local.host:3000/auth/twitter/callback |
+
+=== settings.js ===
+
+{{{
+exports.SECRET_KEY = 'YOUR SECRET KEY';
+exports.TWITTER_CONSUMER_KEY = 'YOUR TWITTER CONSUMER KEY';
+exports.TWITTER_CONSUMER_SECRET = 'YOUR TWITTER CONSUMER SECRET';
+}}}
+* {{{ echo settings.js >> .gitignore }}}
+
+=== app.js ===
+
+* Add
+{{{
+var mongooseAuth = require('mongoose-auth');
+
+var SECRET_KEY = require('./settings.js').SECRET_KEY;
+}}}
+* Remove one middleware (why?) and add three others
+{{{
+  //app.use(app.router);
+  app.use(express.cookieParser());
+  app.use(express.session({secret: SECRET_KEY}));
+  app.use(mongooseAuth.middleware());
+}}}
+* Add
+{{{
+mongooseAuth.helpExpress(app);
+}}}
+
+=== models.js ===
+
+* Add
+{{{
+var mongooseAuth = require('mongoose-auth');
+
+var TWITTER_CONSUMER_KEY = require('./settings.js').TWITTER_CONSUMER_KEY;
+var TWITTER_CONSUMER_SECRET = require('./settings.js').TWITTER_CONSUMER_SECRET;
+
+UserSchema.plugin(mongooseAuth, {
+  everymodule: {
+    everyauth: {
+      User: function() {
+        return User;
+      }
+    }
+  },
+  twitter: {
+    everyauth: {
+      myHostname: 'http://local.host:3000',
+      consumerKey: TWITTER_CONSUMER_KEY,
+      consumerSecret: TWITTER_CONSUMER_SECRET,
+      redirectPath: '/'
+    }
+  }
+});
+}}}
+
+=== views/index.jade ===
+
+* Add
+{{{
+- if (!everyauth.loggedIn)
+  p
+    a(href="/auth/twitter") Log in with Twitter
+- else
+  p #{everyauth.twitter.user.name}
+  p #{everyauth.twitter.user.location}
+  p
+    a(href="http://www.twitter.com/" + everyauth.twitter.user.screen_name) @#{everyauth.twitter.user.screen_name}
+  p
+    a(href='/logout') Log out
+}}}
+
+=== Try it out ===
+
+# {{{ node app.js }}}
+# [[ http://localhost:3000/ ]]

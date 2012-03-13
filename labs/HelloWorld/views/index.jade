@@ -1,5 +1,6 @@
 h1= title
 p Welcome to #{title}
+
 each user in users
   p #{user.username}
 
@@ -9,3 +10,14 @@ form(method="post", action="/users")
     input(name="username")
   div
     input(type="submit", value="Create user")
+
+- if (!everyauth.loggedIn)
+  p
+    a(href="/auth/twitter") Log in with Twitter
+- else
+  p #{everyauth.twitter.user.name}
+  p #{everyauth.twitter.user.location}
+  p
+    a(href="http://www.twitter.com/" + everyauth.twitter.user.screen_name) @#{everyauth.twitter.user.screen_name}
+  p
+    a(href='/logout') Log out

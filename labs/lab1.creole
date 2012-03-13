@@ -52,13 +52,13 @@ It is advised not to install Mongoose globally. Why? (Express should be installe
  * Module dependencies.
  */
 
-mongoose = require('mongoose');
+var mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/hello_world');
 
 var UserSchema = new mongoose.Schema({
   username: String
-})
+});
 
 var User = mongoose.model('User', UserSchema);
 
