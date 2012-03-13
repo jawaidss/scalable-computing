@@ -1,0 +1,43 @@
+= Lab 2 =
+
+== User Creation ==
+
+=== app.js ===
+
+* Under {{{ // Routes }}}, add
+{{{
+app.post('/users', routes.create_user);
+}}}
+
+=== routes/index.js ===
+
+* Add
+{{{
+/*
+ * POST create user.
+ */
+
+exports.create_user = function(req, res){
+  var user = new User();
+  user.username = req.body.username;
+  user.save()
+  res.redirect('back');
+};
+}}}
+
+=== views/index.jade ===
+
+* Add
+{{{
+form(method="post", action="/users")
+  div
+    label Username:
+    input(name="username")
+  div
+    input(type="submit", value="Create user")
+}}}
+
+=== Try it out ===
+
+# {{{ node app.js }}}
+# [[ http://localhost:3000/ ]]

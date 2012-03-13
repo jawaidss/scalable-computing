@@ -9,3 +9,14 @@ exports.index = function(req, res){
     res.render('index', { title: 'Express', users: users });
   });
 };
+
+/*
+ * POST create user.
+ */
+
+exports.create_user = function(req, res){
+  var user = new User();
+  user.username = req.body.username;
+  user.save()
+  res.redirect('back');
+};

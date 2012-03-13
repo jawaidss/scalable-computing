@@ -2,3 +2,10 @@ h1= title
 p Welcome to #{title}
 each user in users
   p #{user.username}
+
+form(method="post", action="/users")
+  div
+    label Username:
+    input(name="username")
+  div
+    input(type="submit", value="Create user")
