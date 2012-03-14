@@ -17,7 +17,7 @@ app.post('/statuses', routes.create_status);
  * POST create status.
  */
 
-exports.create_status = function(req, res){
+exports.create_status = function(req, res) {
   var status = new Status();
   status.message = req.body.message;
   status.save()

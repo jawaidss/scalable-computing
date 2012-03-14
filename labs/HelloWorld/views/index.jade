@@ -1,26 +1,3 @@
-h1= title
-p Welcome to #{title}
-
-h2 Statuses
-each status in statuses
-  p #{status.message}
-
-h2 Create status
-form(method="post", action="/statuses")
-  div
-    label Message:
-    input(name="message")
-  div
-    input(type="submit", value="Create status")
-
-h2 Authentication
-- if (!everyauth.loggedIn)
-  p
-    a(href="/auth/twitter") Log in with Twitter
-- else
-  p #{everyauth.twitter.user.name}
-  p #{everyauth.twitter.user.location}
-  p
-    a(href="http://www.twitter.com/" + everyauth.twitter.user.screen_name) @#{everyauth.twitter.user.screen_name}
-  p
-    a(href='/logout') Log out
+ul
+  each status in statuses
+    li= status.message

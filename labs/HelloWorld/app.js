@@ -13,7 +13,7 @@ var app = module.exports = express.createServer();
 
 // Configuration
 
-app.configure(function(){
+app.configure(function() {
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.bodyParser());
@@ -27,11 +27,13 @@ app.configure(function(){
 
 mongooseAuth.helpExpress(app);
 
-app.configure('development', function(){
+app.set('view options', { pretty: true });
+
+app.configure('development', function() {
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
-app.configure('production', function(){
+app.configure('production', function() {
   app.use(express.errorHandler());
 });
 
