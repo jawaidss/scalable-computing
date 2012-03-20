@@ -20,7 +20,6 @@ function flash(msg) {
 
 $(document).ready(function() {
     $("#create_status input.btn-primary").click(function() {
-        alert($("#create_status input[name='message']").val());
         $.ajax({
             data:{message:$("#create_status input[name='message']").val()},
             type:"PUT",
