@@ -6,7 +6,7 @@
 
 ** Prerequisites: ** CSSE371, CSSE374, permission of instructor
 
-** Enrollment: ** Tim Ekl (2 hrs), Samad Jawaid (4 hrs), Alex Mullans (2 hrs)
+** Enrollment: ** Tim Ekl (4 hrs), Samad Jawaid (4 hrs), Alex Mullans (2 hrs)
 
 ** Description: **
 In-depth study of scalable computing technologies through two cloud
