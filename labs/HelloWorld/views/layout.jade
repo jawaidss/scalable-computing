@@ -8,7 +8,8 @@ html(lang='en')
       meta(name='description', content='')
       meta(name='author', content='')
     link(href='/css/bootstrap.min.css', rel='stylesheet')
-    link(href='/css/layout.css', rel='stylesheet')
+    //
+      link(href='/css/style.css', rel='stylesheet')
     style
       body { padding-top: 60px; }
     link(href='/css/bootstrap-responsive.min.css', rel='stylesheet')
@@ -20,8 +21,6 @@ html(lang='en')
       link(rel='apple-touch-icon-precomposed', sizes='72x72', href='/ico/apple-touch-icon-72-precomposed.png')
       link(rel='apple-touch-icon-precomposed', href='/ico/apple-touch-icon-57-precomposed.png')
   body
-    script(src='/js/jquery.min.js')
-    script(src='/js/bootstrap.min.js')
     .navbar.navbar-fixed-top
       .navbar-inner
         .container
@@ -37,25 +36,26 @@ html(lang='en')
               li
                 a(href='#create_status', data-toggle='modal') Create status
               li
+                a(href='/photos/all') Photos
+              li
                 - if (!everyauth.loggedIn)
                   a(href='/auth/twitter') Log in with Twitter
                 - else
                   a(href='#profile', data-toggle='modal')= everyauth.twitter.user.name
-      .flash_msg
     .container
       h1= title
       != body
       #create_status.modal.hide.fade
-        form.modal-form(id="status-form", action="#")
+        form.modal-form(method='put', action='/status/create')
           .modal-header
             a.close(data-dismiss='modal') &times;
             h3 Create status
           .modal-body
             label Message
-            input(name="message", placeholder="Type something&hellip;")
+            input(name='message', placeholder='Type something&hellip;')
           .modal-footer
             a.btn(href='#', data-dismiss='modal') Close
-            input.btn.btn-primary(type="submit", value="Create status")
+            input.btn.btn-primary(type='submit', value='Create status')
       - if (everyauth.loggedIn)
         #profile.modal.hide.fade
           .modal-header
@@ -68,3 +68,6 @@ html(lang='en')
           .modal-footer
             a.btn(href='#', data-dismiss='modal') Close
             a.btn.btn-primary(href='/logout') Log out
+    script(src='/js/jquery.min.js')
+    script(src='/js/bootstrap.min.js')
+    script(src='/js/script.js')

@@ -1,40 +1,28 @@
-// User param extraction shamelessly stolen from http://www.netlobo.com/url_query_string_javascript.html
-function http_param(name) {
-    name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-    var regexS = "[\\?&]"+name+"=([^&#]*)";
-    var regex = new RegExp(regexS);
-    var results = regex.exec(window.location.href);
-    if (results == null) {
-        return "";
-    } else {
-        return results[1];
-    }
-}
-
-function flash(msg) {
-    $("div.flash_msg").html(msg);
-    $("div.flash_msg").slideDown('fast', function() {
-        $("div.flash_msg").delay(1000).slideUp('fast');
-    });
-}
-
 $(document).ready(function() {
-    $("#create_status input.btn-primary").click(function() {
-        var str = $("#create_status input[name='message']").val();
+    $('#create_status form').submit(function() {
         $.ajax({
-            data:{message:str},
-            success:function(data, textStatus, jqxhr) { 
-                flash("Message successfully posted: " + str);
-                $("ul#statuses").append("<li>" + str + "</li>");
+            data: $(this).serialize(),
+            success: function(data, textStatus, jqXHR) {
+                var li = $('<li></li>');
+                li.html(data.message);
+                $('ul#statuses').append(li);
+                $('#create_status').modal('hide');
+                $('#create_status form').get(0).reset();
+                var div = $('<div></div>');
+                div.addClass('alert');
+                div.addClass('alert-success');
+                var a = $('<a></a>');
+                a.addClass('close');
+                a.attr('data-dismiss', 'alert');
+                a.html("&times;");
+                div.append(a);
+                div.append('Successfully created: ' + data.message);
+                $('body > div.container').prepend(div);
+                return false;
             },
-            type:"PUT",
-            url:"/status/create"
+            type: $(this).attr('method'),
+            url: $(this).attr('action')
         });
-        $("#create_status").modal('hide');
         return false;
     });
-
-    if(http_param("message") != "") {
-        flash("Message successfully posted: " + http_param("message"));
-    }
 });
