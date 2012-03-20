@@ -19,4 +19,5 @@ exports.create_status = function(req, res) {
   status.message = req.body.message;
   status.save();
   console.log("Posted: " + req.body.message);
+  res.send("success");
 };

@@ -20,11 +20,18 @@ function flash(msg) {
 
 $(document).ready(function() {
     $("#create_status input.btn-primary").click(function() {
+        var str = $("#create_status input[name='message']").val();
         $.ajax({
-            data:{message:$("#create_status input[name='message']").val()},
+            data:{message:str},
+            success:function(data, textStatus, jqxhr) { 
+                flash("Message successfully posted: " + str);
+                $("ul#statuses").append("<li>" + str + "</li>");
+            },
             type:"PUT",
             url:"/status/create"
         });
+        $("#create_status").modal('hide');
+        return false;
     });
 
     if(http_param("message") != "") {
