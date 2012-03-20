@@ -11,11 +11,24 @@ function http_param(name) {
     }
 }
 
+function flash(msg) {
+    $("div.flash_msg").html(msg);
+    $("div.flash_msg").slideDown('fast', function() {
+        $("div.flash_msg").delay(1000).slideUp('fast');
+    });
+}
+
 $(document).ready(function() {
-    if(http_param("message") != "") {
-        $("div.flash_msg").html("Message successfully posted.");
-        $("div.flash_msg").slideDown('fast', function() {
-            $("div.flash_msg").delay(1000).slideUp('fast');
+    $("#create_status input.btn-primary").click(function() {
+        alert($("#create_status input[name='message']").val());
+        $.ajax({
+            data:{message:$("#create_status input[name='message']").val()},
+            type:"PUT",
+            url:"/status/create"
         });
+    });
+
+    if(http_param("message") != "") {
+        flash("Message successfully posted: " + http_param("message"));
     }
 });
