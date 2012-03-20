@@ -8,6 +8,7 @@ html(lang='en')
       meta(name='description', content='')
       meta(name='author', content='')
     link(href='/css/bootstrap.min.css', rel='stylesheet')
+    link(href='/css/index.css', rel='stylesheet')
     style
       body { padding-top: 60px; }
     link(href='/css/bootstrap-responsive.min.css', rel='stylesheet')
@@ -38,11 +39,12 @@ html(lang='en')
                   a(href='/auth/twitter') Log in with Twitter
                 - else
                   a(href='#profile', data-toggle='modal')= everyauth.twitter.user.name
+      .flash_msg
     .container
       h1= title
       != body
       #create_status.modal.hide.fade
-        form.modal-form(method="post", action="/statuses")
+        form.modal-form(id="status-form")
           .modal-header
             a.close(data-dismiss='modal') &times;
             h3 Create status
@@ -66,3 +68,4 @@ html(lang='en')
             a.btn.btn-primary(href='/logout') Log out
     script(src='/js/jquery.min.js')
     script(src='/js/bootstrap.min.js')
+    script(src='/js/index.js')

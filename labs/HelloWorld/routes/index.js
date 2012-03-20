@@ -11,12 +11,12 @@ exports.index = function(req, res) {
 };
 
 /*
- * POST create status.
+ * PUT create status.
  */
 
 exports.create_status = function(req, res) {
   var status = new Status();
   status.message = req.body.message;
-  status.save()
-  res.redirect('back');
+  status.save();
+  print("success");
 };
