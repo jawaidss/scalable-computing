@@ -34,8 +34,22 @@ UserSchema.plugin(mongooseAuth, {
   }
 });
 
+var CommentSchema = new mongoose.Schema({
+    text : String
+  , date : Date // timestamp
+});
+
+var PhotoSchema = new mongoose.Schema({
+    path : String // src
+  , description : String // alt
+  , date : Date // timestamp
+  , comments : [CommentSchema]
+  , likes : Number
+});
+
 var Status = mongoose.model('Status', StatusSchema);
 var User = mongoose.model('User', UserSchema);
+var Photo = mongoose.model('Photo', PhotoSchema);
 
 Status.count(function(err, c) {
   if (c == 0) {
@@ -46,3 +60,4 @@ Status.count(function(err, c) {
 });
 
 exports.Status = Status;
+exports.Photo = Photo;
