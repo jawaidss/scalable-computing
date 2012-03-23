@@ -3,9 +3,12 @@
  * Module dependencies.
  */
 
+routes = {};
 var express = require('express')
-  , routes = require('./routes')
   , mongooseAuth = require('mongoose-auth');
+
+routes.index = require('./routes');
+routes.photos = require('./routes/photos.js');
 
 var SECRET_KEY = require('./settings.js').SECRET_KEY;
 
@@ -39,9 +42,9 @@ app.configure('production', function() {
 
 // Routes
 
-app.get('/', routes.index);
-app.put('/status/create', routes.create_status);
-app.get('/photos/all', routes.photos_all)
+app.get('/', routes.index.index);
+app.put('/status/create', routes.index.create_status);
+app.get('/photos/all', routes.photos.all)
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
