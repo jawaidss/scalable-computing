@@ -2,8 +2,8 @@
 
 == User Authentication with Twitter ==
 
+# {{{ sudo apt-get install nodejs-dev }}}
 # {{{ npm install mongoose-auth }}}
-# In case of error involving {{{ node-waf }}}, {{{ sudo apt-get install nodejs-dev }}} and try again
 # Add {{{ 127.0.0.1	localhost	local.host }}} to {{{ /etc/hosts }}}
 # [[ https://dev.twitter.com/apps ]]
 |=Access    |=Callback URL                                 |
