@@ -1,11 +1,15 @@
 .photos_container
-  .left
-    .photo.small
-      img(src="/img/flickr-tmp/00010.jpg")
-  .right
-    .photo.small
-      img(src="/img/flickr-tmp/00093.jpg")
-  .photo.large
-    img(src="/img/flickr-tmp/00111.jpg")
+    each photo in photos
+      .photo.large
+        img(src=photo.path, alt=photo.description)
+  //
+    .left
+      .photo.small
+        img(src="/img/flickr-tmp/00010.jpg")
+    .right
+      .photo.small
+        img(src="/img/flickr-tmp/00093.jpg")
+    .photo.large
+      img(src="/img/flickr-tmp/00111.jpg")
 .credit
   All photos licensed by InterfaceLIFT.com for personal use only.

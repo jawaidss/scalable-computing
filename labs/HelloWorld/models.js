@@ -4,7 +4,8 @@
  */
 
 var mongoose = require('mongoose')
-  , mongooseAuth = require('mongoose-auth');
+  , mongooseAuth = require('mongoose-auth')
+  , fs = require('fs');
 
 var TWITTER_CONSUMER_KEY = require('./settings.js').TWITTER_CONSUMER_KEY;
 var TWITTER_CONSUMER_SECRET = require('./settings.js').TWITTER_CONSUMER_SECRET;
@@ -55,7 +56,24 @@ Status.count(function(err, c) {
   if (c == 0) {
     var status = new Status();
     status.message = 'Hello, World';
-    status.save()
+    status.save();
+  }
+});
+
+Photo.count(function(err, c) {
+  if (c == 0) {
+    var FOLDER = 'public/img/flickr-tmp';
+    fs.readdir(FOLDER, function(err, files) {
+      for (var i in files) {
+        var file = files[i];
+        var photo = new Photo();
+        photo.path = FOLDER.replace(FOLDER.split('/')[0], '') + '/' + file;
+        photo.description = file.split('.')[0];
+        photo.date = new Date();
+        photo.likes = 0;
+        photo.save();
+      }
+    });
   }
 });
 
