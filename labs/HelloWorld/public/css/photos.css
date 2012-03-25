@@ -1,17 +1,11 @@
 .left {
+    width:10%;
     float:left;
 }
 
 .right {
+    width:10%;
     float:right;
-}
-
-.photo {
-    width:400px;
-    height:400px;
-    padding:8px;
-    clear:none;
-    margin:0 auto;
 }
 
 .photo img {
@@ -19,8 +13,13 @@
     height:100%;
 }
 
+.large {
+    width:70%;
+    padding:8px;
+    clear:none;
+    margin:0 auto;
+}
+
 .small {
-    width:100px;
-    height:100px;
     padding-top:150px;
 }
