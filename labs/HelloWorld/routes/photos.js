@@ -1,5 +1,3 @@
-var Status = require('../models').Status;
-
 /*
  * GET photos page.
  */
