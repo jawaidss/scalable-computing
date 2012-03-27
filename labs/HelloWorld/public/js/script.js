@@ -17,7 +17,7 @@ $(document).ready(function() {
                 a.html("&times;");
                 div.append(a);
                 div.append('Successfully created: ' + data.message);
-                $('body > div.container').prepend(div);
+                $('div.page-header').after(div);
                 return false;
             },
             type: $(this).attr('method'),

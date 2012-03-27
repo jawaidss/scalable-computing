@@ -1,17 +1,19 @@
-.photos_container
-  if left
-    .left
-      .photo.small
+if center
+  .row
+    .span2
+      if left
         a(href='/photos/' + (page - 1))
           img(src=left.path, alt=left.description)
-  if right
-    .right
-      .photo.small
-        a(href='/photos/' + (page + 1))
-          img(src=right.path, alt=right.description)
-  if center
-    .photo.large
+      else
+        &nbsp;
+    .span6.offset1
       a(href=center.path)
         img(src=center.path, alt=center.description)
-.credit
-  All photos licensed by InterfaceLIFT.com for personal use only.
+    .span2.offset1
+      if right
+        a(href='/photos/' + (page + 1))
+          img(src=right.path, alt=right.description)
+      else
+        &nbsp;
+  br
+div.alert.alert-info="All photos licensed by InterfaceLIFT.com for personal use only."

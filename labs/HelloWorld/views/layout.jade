@@ -42,7 +42,8 @@ html(lang='en')
                 - else
                   a(href='#profile', data-toggle='modal')= everyauth.twitter.user.name
     .container
-      h1= title
+      .page-header
+        h1= title
       != body
       #create_status.modal.hide.fade
         form.modal-form(method='put', action='/status/create')
