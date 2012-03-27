@@ -1,15 +1,17 @@
 .photos_container
-    each photo in photos
-      .photo.large
-        img(src=photo.path, alt=photo.description)
-  //
+  if left
     .left
       .photo.small
-        img(src="/img/flickr-tmp/00010.jpg")
+        a(href='/photos/' + (page - 1))
+          img(src=left.path, alt=left.description)
+  if right
     .right
       .photo.small
-        img(src="/img/flickr-tmp/00093.jpg")
+        a(href='/photos/' + (page + 1))
+          img(src=right.path, alt=right.description)
+  if center
     .photo.large
-      img(src="/img/flickr-tmp/00111.jpg")
+      a(href=center.path)
+        img(src=center.path, alt=center.description)
 .credit
   All photos licensed by InterfaceLIFT.com for personal use only.

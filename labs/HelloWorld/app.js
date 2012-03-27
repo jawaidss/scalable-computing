@@ -45,8 +45,8 @@ app.configure('production', function() {
 
 app.get('/', routes.index.index);
 app.put('/status/create', routes.index.create_status);
-app.get('/photos/all', routes.photos.all)
-app.get('/thumbs/all', routes.thumbs.all)
+app.get('/photos/:page', routes.photos.all);
+app.get('/thumbs/all', routes.thumbs.all);
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
