@@ -46,6 +46,7 @@ var PhotoSchema = new mongoose.Schema({
   , date : Date // timestamp
   , comments : [CommentSchema]
   , likes : Number
+  , data : Buffer
 });
 
 var Status = mongoose.model('Status', StatusSchema);
