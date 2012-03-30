@@ -35,12 +35,10 @@ exports.all = function(req, res) {
   });
 };
 
-exports.photo = function(req, res) {
-    var id = req.params.id || "";
+function get_photo(id, callback) {
     Photo.find({description:id}, function(err, photos) {
         if(photos.length == 0) {
-            res.send("no photo");
-            return;
+            callback(undefined);
         } else {
             var photo = photos[0];
 
@@ -51,13 +49,46 @@ exports.photo = function(req, res) {
                     if(err) throw err;
 
                     photo.data = data;
-                    photo.save();
+                    photo.save(function(err) {
+                        if(err) {
+                            console.log("error saving; photo will reload next fetch");
+                        }
+                    });
 
-                    res.send(photo.data);
+                    callback(photo);
                 });
             } else {
-                res.send(photo.data);
+                callback(photo);
             }
         }
+    });
+}
+
+exports.photo = function(req, res) {
+    var id = req.params.id || "";
+    var photo = get_photo(id, function(photo) {
+        if(typeof(photo) == "undefined") {
+            console.log("no photo");
+        } else {
+            res.send(photo.data);
+        }
+    });
+};
+
+exports.thumb = function(req, res) {
+    var id = req.params.id || "";
+    var photo = get_photo(id, function(photo) {
+        if(typeof(photo) == "undefined") {
+            return;
+        }
+
+        var im = require('imagemagick');
+        var tdata = im.resize({
+            srcData: photo.data,
+            width: 256
+        }, function(err, stdout, stderr) {
+            if(err) throw err;
+            res.send(stdout);
+        });
     });
 };
