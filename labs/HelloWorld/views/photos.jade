@@ -3,16 +3,16 @@ if center
     .span2
       if left
         a(href='/photos/' + (page - 1))
-          img(src=left.path, alt=left.description)
+          img(src='/photo/' + left.description, alt=left.description)
       else
         &nbsp;
     .span6.offset1
-      a(href=center.path)
-        img(src=center.path, alt=center.description)
+      a(href='/photo' + center.description)
+        img(src='/photo/' + center.description, alt=center.description)
     .span2.offset1
       if right
         a(href='/photos/' + (page + 1))
-          img(src=right.path, alt=right.description)
+          img(src='/photo/' + right.description, alt=right.description)
       else
         &nbsp;
   br
