@@ -34,3 +34,30 @@ exports.all = function(req, res) {
     res.render('photos', context);
   });
 };
+
+exports.photo = function(req, res) {
+    var id = req.params.id || "";
+    Photo.find({description:id}, function(err, photos) {
+        if(photos.length == 0) {
+            res.send("no photo");
+            return;
+        } else {
+            var photo = photos[0];
+
+            if(typeof(photo.data) == "undefined") {
+                var fs = require('fs');
+
+                fs.readFile('./public/img/flickr-tmp/' + id + '.jpg', function(err, data) {
+                    if(err) throw err;
+
+                    photo.data = data;
+                    photo.save();
+
+                    res.send(photo.data);
+                });
+            } else {
+                res.send(photo.data);
+            }
+        }
+    });
+};

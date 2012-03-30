@@ -46,6 +46,7 @@ app.configure('production', function() {
 app.get('/', routes.index.index);
 app.put('/status/create', routes.index.create_status);
 app.get('/photos/:page', routes.photos.all);
+app.get('/photo/:id', routes.photos.photo);
 app.get('/thumbs/all', routes.thumbs.all);
 
 app.listen(3000);
