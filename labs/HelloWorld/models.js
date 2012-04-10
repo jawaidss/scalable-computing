@@ -47,6 +47,7 @@ var PhotoSchema = new mongoose.Schema({
   , comments : [CommentSchema]
   , likes : Number
   , data : Buffer
+  , tags : [String]
 });
 
 var Status = mongoose.model('Status', StatusSchema);
@@ -64,6 +65,16 @@ Status.count(function(err, c) {
 Photo.count(function(err, c) {
   if (c == 0) {
     var FOLDER = 'public/img/flickr-tmp';
+    var TAGS = [
+      'foo',
+      'bar',
+      'baz',
+      'yolo',
+      'computers',
+      'cars',
+      'stuff',
+      'things'
+    ];
     fs.readdir(FOLDER, function(err, files) {
       for (var i in files) {
         var file = files[i];
@@ -72,6 +83,15 @@ Photo.count(function(err, c) {
         photo.description = file.split('.')[0];
         photo.date = new Date();
         photo.likes = 0;
+        var j = 0;
+        var n = Math.ceil(Math.random() * 5);
+        while (j < n) {
+          var tag = TAGS[Math.floor(Math.random() * (TAGS.length + 1))];
+          if (photo.tags.indexOf(tag) == -1) {
+            photo.tags.push(tag);
+          }
+          j++;
+        }
         photo.save();
       }
     });
