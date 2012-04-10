@@ -86,7 +86,7 @@ Photo.count(function(err, c) {
         var j = 0;
         var n = Math.ceil(Math.random() * 5);
         while (j < n) {
-          var tag = TAGS[Math.floor(Math.random() * (TAGS.length + 1))];
+          var tag = TAGS[Math.round(Math.random() * (TAGS.length - 1))];
           if (photo.tags.indexOf(tag) == -1) {
             photo.tags.push(tag);
           }
