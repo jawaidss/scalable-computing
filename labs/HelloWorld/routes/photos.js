@@ -6,13 +6,18 @@ var Photo = require('../models').Photo;
 
 exports.all = function(req, res) {
   var page = parseInt(req.params.page) || 0; // :page or all (first page)
+  var tag = req.params.tag;
+  var query = {};
+  if (tag) {
+    query = {tags: {$in: [tag]}};
+  }
   var options;
   if (page == 0) { // first page is a special case
     options = {limit: 2};
   } else {
     options = {skip: page - 1, limit: 3};
   }
-  Photo.find({}, ['path', 'description'], options, function(err, photos) {
+  Photo.find(query, ['description', 'tags'], options, function(err, photos) {
     var n = photos.length;
     var context;
     if (n == 0) {
@@ -28,8 +33,12 @@ exports.all = function(req, res) {
     } else if (n == 3) {
       context = {'left': photos[0], 'center': photos[1], 'right': photos[2]};
     }
+    context.tag = tag;
     context.page = page;
     context.title = 'Photos';
+    if (tag) {
+      context.title += ' - ' + tag;
+    }
     context.stylesheet = 'photos.css';
     res.render('photos', context);
   });
