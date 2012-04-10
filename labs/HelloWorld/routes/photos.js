@@ -17,6 +17,7 @@ exports.all = function(req, res) {
   } else {
     options = {skip: page - 1, limit: 3};
   }
+  options.sort = {description: 1};
   Photo.find(query, ['description', 'tags'], options, function(err, photos) {
     var n = photos.length;
     var context;
