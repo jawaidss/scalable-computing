@@ -1,0 +1,111 @@
+%%%
+% CSSE lab template
+% Written March 28, 2011 by Tim Ekl
+%
+% This template is part of a template system; you should be generating a lab
+% using the newlab.sh file. Once you have generated the lab, feel free to
+% remove this comment.
+%
+% This lab has five TODO items that need to be completed manually after
+% generating the lab from template. Suggestions are provided with each TODO.
+%
+% For more info and examples of labs built from this template, see:
+% http://github.com/CSSE376/Labs (note you must be a 376 TA to access)
+%%%
+
+\documentclass{article}
+
+\newcommand{\labduedate}{at the end of Week 2}
+
+\input{../common/header}
+
+\pagestyle{fancy}
+\headheight 24pt
+\begin{document}
+
+\chead{\textcolor{Gray}{CSSE491 -- Scalable Computing Lab Assignment}}
+\headsep = 24pt
+
+\begin{center}
+{ \large
+\textbf{Lab \labnumber: \longproductname} \\
+\textbf{Modifying Data}
+}
+\end{center}
+
+\subsection*{Objective}
+This lab builds on lab 1 to introduce students to the process of modifying data in a Node.js application using REST principles.
+
+\subsection*{Lab format}
+As with lab 1, this lab is almost entirely guided; it walks students through the process of adding a route and corresponding view to the existing HelloWorld Node.js application.
+
+\subsection*{Required materials}
+Students need a laptop, an Internet connection, and the HelloWorld app created in lab 1.
+
+\subsection*{Grading rubric}
+\begin{tabular}{p{5.5in} r}
+Tasks 1 and 2 are worth \textbf{10} points each & $2 \times 10 = 20$ \\ \hline
+& \textbf{20} points total
+\end{tabular}
+
+\subsection*{Due date}
+The lab is due \textcolor{red}{\textbf{\labduedate}}.
+
+\input{../common/turnin}
+
+\task{10}{Add a Route}
+
+Open the file \verb!app.js!. In the Routes section, add:
+
+\begin{minted}{javascript}
+app.post('/statuses', routes.create_status)
+\end{minted}
+
+This binds the \verb!/statuses! path in your webapp to a function called \verb!create_status! in the routes definition file. Next we need to implement that function. Open the file \verb!routes/index.js! and add at the end:
+
+\begin{minted}{javascript}
+/*
+ * POST create status
+ */
+
+exports.create_status = function(req, res) {
+    var status = new Status();
+    status.message = req.body.message;
+    status.save();
+    res.redirect('back');
+};
+\end{minted}
+
+\task{10}{Add a view}
+
+Now we can add statuses to our application, but we'd have to hit the \verb!/statuses! URL manually; let's make this easier on our users by changing our views to allow status creation from entirely within the webapp. Open the file \verb!views/index.jade! and add at the end:
+
+\begin{minted}{jade}
+h2 Create Status
+form(method="post", action="/statuses")
+  div
+    label Message:
+    input(name="message")
+  div
+    input(type="submit", value="Create status")
+\end{minted}
+
+\subsection*{Test the App}
+
+At a shell, run the webapp with:
+
+\begin{minted}{bash}
+node app.js
+\end{minted}
+
+Check to see that you can add a status by going to \href{http://localhost:3000/}{http://localhost:3000} and using the status-creation box you see there.
+
+\input{../common/turnin}
+
+\subsection*{Revision History}
+\begin{itemize*}
+\item April 13, 2012: Lab converted to LaTeX by Tim Ekl
+\item March 13, 2012: Lab written by Samad Jawaid
+\end{itemize*}
+
+\end{document}
