@@ -1,0 +1,186 @@
+%%%
+% CSSE lab template
+% Written March 28, 2011 by Tim Ekl
+%
+% This template is part of a template system; you should be generating a lab
+% using the newlab.sh file. Once you have generated the lab, feel free to
+% remove this comment.
+%
+% This lab has five TODO items that need to be completed manually after
+% generating the lab from template. Suggestions are provided with each TODO.
+%
+% For more info and examples of labs built from this template, see:
+% http://github.com/CSSE376/Labs (note you must be a 376 TA to access)
+%%%
+
+\documentclass{article}
+
+\newcommand{\labduedate}{at the end of Week 1}
+
+\input{../common/header}
+
+\pagestyle{fancy}
+\headheight 24pt
+\begin{document}
+
+\chead{\textcolor{Gray}{CSSE491 -- Scalable Computing Lab Assignment}}
+\headsep = 24pt
+
+\begin{center}
+{ \large
+\textbf{Lab \labnumber: \longproductname} \\
+\textbf{Getting Started}
+}
+\end{center}
+
+\subsection*{Objective}
+The goal of this lab is to introduce students to server-side webapp programming using a number of relatively new frameworks. By the end of the lab, students should be acquainted with Node.js, MongoDB (and its Node library Mongoose), and Express.
+
+\subsection*{Lab format}
+As an introductory assignment, this lab primarily guides the user through the installation of Node.js components and dependencies, then instructs students on construction of a basic HelloWorld app. The lab is primarily guided.
+
+\subsection*{Required materials}
+Students will need a laptop with an active Internet connection.
+
+\subsection*{Grading rubric}
+\begin{tabular}{p{5.5in} r}
+  % TODO: Where are points coming from in this lab? (Usually this is the last section filled in, as it must be listed and totalled manually.)
+\end{tabular}
+
+\subsection*{Due date}
+The lab is due \textcolor{red}{\textbf{\labduedate}}.
+
+\input{../common/turnin}
+
+\task{5}{Install Node.js}
+
+\begin{minted}{bash}
+sudo apt-get install python-software-properties
+sudo add-apt-repository ppa:chris-lea/node.js
+sudo apt-get update
+sudo apt-get install nodejs
+\end{minted}
+
+\textit{Note: without the first three commands, a very old version may be installed.}
+
+\task{5}{Install MongoDB}
+
+\begin{minted}{bash}
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" | sudo tee -a /etc/apt/sources.list
+sudo apt-get update
+sudo apt-get install mongodb-10gen
+\end{minted}
+
+\textit{Note: With just the package} \verb!mongodb!, \textit{an old version may be installed.}
+
+\task{5}{Install NPM}
+
+\begin{minted}{bash}
+sudo apt-get install curl
+curl http://npmjs.org/install.sh | sudo sh
+\end{minted}
+
+\question{5}{It is advised not to install npm as root. Why?}
+
+\task{5}{Install Express and Mongoose}
+
+\begin{minted}{bash}
+sudo npm install express mongoose -g
+\end{minted}
+
+\question{5} It is advised to install Express globally, since it has a common executable. However, Mongoose should not be installed globally. Why?
+
+\task{10}{Hello, World}
+
+\begin{minted}{bash}
+express HelloWorld
+cd HelloWorld && npm install
+npm install mongoose
+echo node_modules > .gitignore
+\end{minted}
+
+\question{5} Why do you think we need to install Mongoose locally even though it is already installed globally?
+
+\task{10}{Write Mongoose models}
+
+\begin{enumerate*}
+\item Import mongoose
+\item Connect to the database
+\item Create a status schema
+\item Create a status model
+\item Create a status instance, if none exist
+\item Export the status model
+\end{enumerate}
+
+In the file \verb!models.js!, type:
+
+\begin{minted}{javascript}
+/**
+ * Module dependencies.
+ */
+
+var mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/hello_world');
+
+var StatusSchema = new mongoose.Schema({
+    message: String
+});
+
+var Status = mongoose.model('Status', StatusSchema);
+
+Status.count(function(err, c) {
+    if (c == 0) {
+        var status = new Status();
+        status.message = 'Hello, World';
+        status.save()
+    }
+});
+
+exports.Status = Status;
+\end{minted}
+
+\task{10}{Write an initial route and view}
+
+In the file \verb!routes/index.js!, import the Status model by adding the line:
+
+\begin{minted}{javascript}
+var Status = require('../models').Status;
+\end{minted}
+
+Replace the basic view rendering (the line beginning \verb!res.render!) with:
+
+\begin{minted}{javascript}
+Status.find(function(err, statuses) {
+    res.render('index', { title: 'Express', statuses: statuses });
+});
+\end{minted}
+
+In the file \verb!views/index.jade!, add:
+
+\begin{minted}{jade}
+h2 Statuses
+each status in statuses
+  p #{status.message}
+\end{minted}
+
+\subsection*{Run your app}
+
+Run the app by typing at a shell:
+
+\begin{minted}{bash}
+node app.js
+\end{minted}
+
+Now access the URL \href{http://localhost:3000/}{http://localhost:3000}; you should see a status-list page.
+
+\input{../common/turnin}
+
+\subsection*{Revision History}
+\begin{itemize*}
+ \item April 12, 2012: Lab converted to LaTeX by Tim Ekl
+ \item March 9, 2012: Lab written by Samad Jawaid
+\end{itemize*}
+
+\end{document}
