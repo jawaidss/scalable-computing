@@ -1,0 +1,184 @@
+%%%
+% CSSE lab template
+% Written March 28, 2011 by Tim Ekl
+%
+% This template is part of a template system; you should be generating a lab
+% using the newlab.sh file. Once you have generated the lab, feel free to
+% remove this comment.
+%
+% This lab has five TODO items that need to be completed manually after
+% generating the lab from template. Suggestions are provided with each TODO.
+%
+% For more info and examples of labs built from this template, see:
+% http://github.com/CSSE376/Labs (note you must be a 376 TA to access)
+%%%
+
+\documentclass{article}
+
+\newcommand{\labduedate}{at the end of Week 3}
+
+\input{../common/header}
+
+\pagestyle{fancy}
+\headheight 24pt
+\begin{document}
+
+\chead{\textcolor{Gray}{CSSE491 -- Scalable Computing Lab Assignment}}
+\headsep = 24pt
+
+\begin{center}
+{ \large
+\textbf{Lab \labnumber: \longproductname} \\
+\textbf{User Authentication}
+}
+\end{center}
+
+\subsection*{Objective}
+Up to this point, we've been writing a public webapp: anyone with the URL can view or modify data. However, security is a huge (and growing) concern online; this lab aims to introduce security concepts by integrating user authentication (via Twitter) with the existing HelloWorld app from labs 1 and 2.
+
+\subsection*{Lab format}
+As with previous labs, this lab is mostly guided. Students will get authentication tokens from Twitter, then modify existing app files to work against the Twitter user framework.
+
+\subsection*{Required materials}
+Students will need a laptop, an Internet connection, a Twitter account, and the HelloWorld app from labs 1 and 2.
+
+\subsection*{Grading rubric}
+\begin{tabular}{p{5.5in} r}
+Question 1 is worth \textbf{5} points & $1 \times 5 = 5$ \\
+Task 1 is worth \textbf{5} points & $1 \times 5 = 5$ \\
+Tasks 2-4 are worth \textbf{10} points each & $3 \times 10 = 30$ \\ \hline
+& \textbf{40} points
+\end{tabular}
+
+\subsection*{Due date}
+The lab is due \textcolor{red}{\textbf{\labduedate}}.
+
+\input{../common/turnin}
+
+\task{5}{Twitter Keys}
+
+Before we begin development, you'll need to fetch some authentication info from Twitter. If you haven't already, \href{http://twitter.com}{sign up} for a Twitter account. Then, at a shell in your HelloWorld directory, type:
+
+\begin{minted}{bash}
+$ sudo apt-get install nodejs-dev
+$ npm install mongoose-auth
+\end{minted}
+
+You'll also need to alias the hostname \verb!local.host! to localhost; edit the file \verb!/etc/hosts! in your preferred text editor, and make sure it contains the line:
+
+\begin{verbatim}
+127.0.0.1 localhost local.host
+\end{verbatim}
+
+Now go to your \href{https://dev.twitter.com/apps}{Twitter app dev page} and add the following information:
+
+\begin{center}
+\begin{tabular}{p{1in} | p{4in}} \hline
+\textbf{Access} & Read-only \\ \hline
+\textbf{Callback URL} & \verb!http://local.host:3000/auth/twitter/callback! \\ \hline
+\end{tabular}
+\end{center}
+
+Finally, create a new file called \verb!settings.js! in the root of your HelloWorld directory and add the following lines, replacing as appropriate:
+
+\begin{minted}{javascript}
+exports.SECRET_KEY = 'YOUR SECRET KEY';
+exports.TWITTER_CONSUMER_KEY = 'YOUR CONSUMER KEY';
+exports.TWITTER_CONSUMER_SECRET = 'YOUR CONSUMER SECRET';
+\end{minted}
+
+\task{10}{Modifying the App}
+
+Open the file \verb!app.js!. Add near the top:
+
+\begin{minted}{javascript}
+var mongooseAuth = require('mongoose-auth');
+
+var SECRET_KEY = require('./settings.js').SECRET_KEY;
+\end{minted}
+
+Now we need to remove some standard middleware and replace it with others. Comment the line:
+
+\begin{minted}{javascript}
+app.use(app.router);
+\end{minted}
+
+After this newly commented line, add:
+
+\begin{minted}{javascript}
+app.use(express.cookieParser());
+app.use(express.session({secret: SECRET_KEY}));
+app.use(mongooseAuth.middleware());
+\end{minted}
+
+Finally, add:
+
+\begin{minted}{javascript}
+mongooseAuth.helpExpress(app);
+\end{minted}
+
+\question{5} Why do you think we needed to remove the first middleware item (\verb!app.router!) before adding the others?
+
+\task{10}{Updating the Models}
+
+Our app file now supports authentication with the mongoose-auth package; however, we have yet to define what our user schema looks like in a way that our app can understand. Open the file \verb!models.js! and add the following block:
+
+\begin{minted}{javascript}
+var mongooseAuth = require('mongoose-auth');
+
+var TWITTER_CONSUMER_KEY = require('./settings.js').TWITTER_CONSUMER_KEY;
+var TWITTER_CONSUMER_SECRET = require('./settings.js').TWITTER_CONSUMER_SECRET;
+
+var UserSchema = new mongoose.Schema();
+UserSchema.plugin(mongooseAuth, {
+    everymodule: {
+        everyauth: {
+            User: function() {
+                return User;
+            }   
+        }   
+    },  
+    twitter: {
+        everyauth: {
+            myHostname: 'http://local.host:3000',
+            consumerKey: TWITTER_CONSUMER_KEY,
+            consumerSecret: TWITTER_CONSUMER_SECRET,
+            redirectPath: '/' 
+        }   
+    }
+});
+
+var User = mongoose.model('User', UserSchema);
+\end{minted}
+
+\task{10}{Showing Login Status}
+
+As with in lab 2, we've done everything on the backend to support a new feature, but where does it appear? We need to edit the view again. Open the file \verb!views/index.jade! and add:
+
+\begin{minted}{jade}
+h2 Authentication
+- if(!everyauth.loggedIn)
+  p
+    a(href="/auth/twitter") Log in with Twitter
+- else
+  p #{everyauth.twitter.user.name}
+  p #{everyauth.twitter.user.location}
+  p
+    a(href="http://www.twitter.com/" + everyauth.twitter.user.screen_name) @#{everyauth.twitter.user.screen_name}
+  p
+    a(href="/logout") Log out
+\end{minted}
+
+\subsection*{Try It Out}
+
+As always, go to the URL \href{http://localhost:3000/}{http://localhost:3000} to try your new feature.
+
+\input{../common/turnin}
+
+\subsection*{Revision History}
+\begin{itemize*}
+\item April 13, 2012: Lab converted to LaTeX by Tim Ekl
+\item March 13, 2012: Lab written by Samad Jawaid
+\end{itemize*}
+
+\end{document}
