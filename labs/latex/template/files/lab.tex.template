@@ -1,0 +1,68 @@
+%%%
+% CSSE lab template
+% Written March 28, 2011 by Tim Ekl
+%
+% This template is part of a template system; you should be generating a lab
+% using the newlab.sh file. Once you have generated the lab, feel free to
+% remove this comment.
+%
+% This lab has five TODO items that need to be completed manually after
+% generating the lab from template. Suggestions are provided with each TODO.
+%
+% For more info and examples of labs built from this template, see:
+% http://github.com/CSSE376/Labs (note you must be a 376 TA to access)
+%%%
+
+\documentclass{article}
+
+\newcommand{\labduedate}{***DUEDATE***}
+
+\input{../common/header}
+
+\pagestyle{fancy}
+\headheight 24pt
+\begin{document}
+
+\chead{\textcolor{Gray}{CSSE491 -- Scalable Computing Lab Assignment}}
+\headsep = 24pt
+
+\begin{center}
+{ \large
+\textbf{Lab \labnumber: \longproductname} \\
+\textbf{***NAME***}
+}
+\end{center}
+
+\subsection*{Objective}
+% TODO: What is the objective of this lab? What should students be learning?
+
+\subsection*{Lab format}
+% TODO: What format is the lab in? Is it entirely written? Code-based? Are there auxiliary documents that supplement the lab (e.g. videos, code packages)?
+
+\subsection*{Required materials}
+% TODO: What do students need to complete the lab? (Common items include a laptop and an Internet connection.)
+
+\subsection*{Grading rubric}
+\begin{tabular}{p{5.5in} r}
+  % TODO: Where are points coming from in this lab? (Usually this is the last section filled in, as it must be listed and totalled manually.)
+\end{tabular}
+
+\subsection*{Due date}
+The lab is due \textcolor{red}{\textbf{\labduedate}}.
+
+\input{../common/turnin}
+
+%%%
+% TODO: Content of the lab goes here! Recall you can use the following commands:
+%       \task{points}{Task Name}
+%       \question{points} Questionable question?
+%%%
+
+\input{../common/turnin}
+
+\subsection*{Revision History}
+\begin{itemize*}
+ \item ***GENDATE***: Lab created with template generator
+\end{itemize*}
+
+\end{document}

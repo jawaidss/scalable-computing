@@ -1,0 +1,26 @@
+TEXFLAGS=-shell-escape -synctex=1
+AUXFILES=***AUXFILES***
+
+all : ***TARGETS***
+.PHONY : all
+
+list-targets : FORCE
+	@echo "***TARGETS***"
+.PHONY : list-targets
+
+***TARGETS*** : Lab***NUMBER***-***NAME***.tex FORCE
+	for file in ${AUXFILES}; do echo "\input{$@/$$file}" >> $$file.tex; done
+	pdflatex ${TEXFLAGS} Lab***NUMBER***-***NAME***.tex
+	pdflatex ${TEXFLAGS} Lab***NUMBER***-***NAME***.tex
+	mv Lab***NUMBER***-***NAME***.pdf Lab***NUMBER***-***NAME***-$@.pdf
+	make clean_auxfiles
+
+clean_auxfiles : FORCE
+	for file in ${AUXFILES}; do rm -f $$file.tex; done
+	rm -f Lab***NUMBER***-***NAME***.aux Lab***NUMBER***-***NAME***.log Lab***NUMBER***-***NAME***.out Lab***NUMBER***-***NAME***.pyg Lab***NUMBER***-***NAME***.synctex.gz
+
+clean : clean_auxfiles
+	rm -f Lab***NUMBER***-***NAME****.pdf
+.PHONY : clean
+
+FORCE :

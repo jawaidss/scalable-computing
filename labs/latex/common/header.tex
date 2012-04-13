@@ -1,0 +1,45 @@
+% Actual required things start here
+\usepackage{array}
+\usepackage{mdwlist}
+\usepackage{fancyhdr}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{graphicx}
+\usepackage{minted}
+\usepackage{fullpage}
+\usepackage[colorlinks=true]{hyperref}
+\usepackage{textcomp}
+\usepackage{totcount}
+
+% Helpful shortcuts for the document itself
+\input{definitions}
+
+\newtotcounter{questions}\setcounter{questions}{0}
+\newcommand{\question}[1]{
+\addtocounter{questions}{1}
+\ifnum1=#1
+\textbf{[Question \arabic{questions} \textrm{\textit{(#1 pt)}}] }
+\else
+\textbf{[Question \arabic{questions} \textrm{\textit{(#1 pts)}}] }
+\fi
+}
+
+\newtotcounter{tasks}\setcounter{tasks}{0}
+\newcommand{\task}[2]{
+\addtocounter{tasks}{1}
+\setcounter{subtasks}{0}
+\ifnum0=#1
+\subsection*{Task \arabic{tasks}: #2}
+\else
+\subsection*{Task \arabic{tasks}: #2 \textit{(#1 pts)}}
+\fi
+}
+
+\newtotcounter{subtasks}\setcounter{subtasks}{0}
+\newcommand{\subtask}[2]{
+\addtocounter{subtasks}{1}
+\ifnum0=#1
+\subsubsection*{Subtask \arabic{tasks}.\arabic{subtasks}: #2}
+\else
+\subsubsection*{Task \arabic{tasks}.\arabic{subtasks}: #2 \textit{(#1 pts)}}
+\fi
+}
