@@ -1,0 +1,218 @@
+%%%
+% CSSE lab template
+% Written March 28, 2011 by Tim Ekl
+%
+% This template is part of a template system; you should be generating a lab
+% using the newlab.sh file. Once you have generated the lab, feel free to
+% remove this comment.
+%
+% This lab has five TODO items that need to be completed manually after
+% generating the lab from template. Suggestions are provided with each TODO.
+%
+% For more info and examples of labs built from this template, see:
+% http://github.com/CSSE376/Labs (note you must be a 376 TA to access)
+%%%
+
+\documentclass{article}
+
+\newcommand{\labduedate}{at the end of week 4}
+
+\input{../common/header}
+
+\pagestyle{fancy}
+\headheight 24pt
+\begin{document}
+
+\chead{\textcolor{Gray}{CSSE491 -- Scalable Computing Lab Assignment}}
+\headsep = 24pt
+
+\begin{center}
+{ \large
+\textbf{Lab \labnumber: \longproductname} \\
+\textbf{Photos}
+}
+\end{center}
+
+\subsection*{Objective}
+% TODO: What is the objective of this lab? What should students be learning?
+
+\subsection*{Lab format}
+% TODO: What format is the lab in? Is it entirely written? Code-based? Are there auxiliary documents that supplement the lab (e.g. videos, code packages)?
+
+\subsection*{Required materials}
+% TODO: What do students need to complete the lab? (Common items include a laptop and an Internet connection.)
+Photos from \href{http://interfacelift.com}{interfacelift} in \verb!public/img/flickr-tmp!
+
+\subsection*{Grading rubric}
+\begin{tabular}{p{5.5in} r}
+  % TODO: Where are points coming from in this lab? (Usually this is the last section filled in, as it must be listed and totalled manually.)
+\end{tabular}
+
+\subsection*{Due date}
+The lab is due \textcolor{red}{\textbf{\labduedate}}.
+
+\input{../common/turnin}
+
+%%%
+% TODO: Content of the lab goes here! Recall you can use the following commands:
+%       \task{points}{Task Name}
+%       \question{points} Questionable question?
+%%%
+
+\task{0}{models.js}
+
+\begin{minted}{javascript}
+var CommentSchema = new mongoose.Schema({
+    text : String
+  , date : Date // timestamp
+});
+
+var PhotoSchema = new mongoose.Schema({
+    path : String // src
+  , description : String // alt
+  , date : Date // timestamp
+  , comments : [CommentSchema]
+  , likes : Number
+  , tags : [String]
+});
+
+
+var Photo = mongoose.model('Photo', PhotoSchema);
+
+
+Photo.count(function(err, c) {
+  if (c == 0) {
+    var FOLDER = 'public/img/flickr-tmp';
+    var TAGS = [
+      'foo',
+      'bar',
+      'baz',
+      'yolo',
+      'computers',
+      'cars',
+      'stuff',
+      'things'
+    ];
+    fs.readdir(FOLDER, function(err, files) {
+      for (var i in files) {
+        var file = files[i];
+        var photo = new Photo();
+        photo.path = FOLDER.replace(FOLDER.split('/')[0], '') + '/' + file;
+        photo.description = file.split('.')[0];
+        photo.date = new Date();
+        photo.likes = 0;
+        var j = 0;
+        var n = Math.ceil(Math.random() * 5);
+        while (j < n) {
+          var tag = TAGS[Math.round(Math.random() * (TAGS.length - 1))];
+          if (photo.tags.indexOf(tag) == -1) {
+            photo.tags.push(tag);
+          }
+          j++;
+        }
+        photo.save();
+      }
+    });
+  }
+});
+
+
+exports.Photo = Photo;
+\end{minted}
+
+\task{0}{app.js}
+
+\begin{minted}{javascript}
+routes.photos = require('./routes/photos.js');
+
+
+app.get('/photos/:page/:tag?', routes.photos.all);
+\end{minted}
+
+\task{0}{routes/photos.js}
+
+\begin{minted}{javascript}
+var Photo = require('../models').Photo;
+
+exports.all = function(req, res) {
+  var page = parseInt(req.params.page) || 0; // :page or all (first page)
+  var tag = req.params.tag;
+  var query = {};
+  if (tag) {
+    query = {tags: {$in: [tag]}};
+  }
+  var options;
+  if (page == 0) { // first page is a special case
+    options = {limit: 2};
+  } else {
+    options = {skip: page - 1, limit: 3};
+  }
+  options.sort = {description: 1};
+  Photo.find(query, ['path', 'description', 'tags'], options, function(err, photos) {
+    var n = photos.length;
+    var context;
+    if (n == 0) {
+      context = {'left': null, 'center': null, 'right': null};
+    } else if (n == 1) {
+      context = {'left': null, 'center': photos[0], 'right': null};
+    } else if (n == 2) {
+      if (page == 0) { // first page is a special case
+        context = {'left': null, 'center': photos[0], 'right': photos[1]};
+      } else {
+        context = {'left': photos[0], 'center': photos[1], 'right': null};
+      }
+    } else if (n == 3) {
+      context = {'left': photos[0], 'center': photos[1], 'right': photos[2]};
+    }
+    context.tag = tag;
+    context.page = page;
+    context.title = 'Photos';
+    if (tag) {
+      context.title += ' - ' + tag;
+    }
+    context.stylesheet = 'photos.css';
+    res.render('photos', context);
+  });
+};
+\end{minted}
+
+\task{0}{views/photos.jade}
+
+\begin{minted}{jade}
+if center
+  .row
+    .span2
+      if left
+        a(href='/photos/' + (page - 1) + (tag && ('/' + tag) || ''))
+          img(src=left.path, alt=left.description)
+      else
+        &nbsp;
+    .span6.offset1
+      a(href='/photo/' + center.description)
+        img(src=center.path, alt=center.description)
+    .span2.offset1
+      if right
+        a(href='/photos/' + (page + 1) + (tag && ('/' + tag) || ''))
+          img(src=right.path, alt=right.description)
+      else
+        &nbsp;
+  br
+  div.btn-group
+    each tag in center.tags
+      a.btn(href='/photos/all/' + tag)=tag
+  br
+div.alert.alert-info="All photos licensed by InterfaceLIFT.com for personal use only."
+\end{minted}
+
+\verb!node app.js!
+
+\href{http://localhost:3000/photos}{http://localhost:3000/photos}
+
+\input{../common/turnin}
+
+\subsection*{Revision History}
+\begin{itemize*}
+ \item Sat Apr 14 15:35:06 EDT 2012: Lab created with template generator
+\end{itemize*}
+
+\end{document}
