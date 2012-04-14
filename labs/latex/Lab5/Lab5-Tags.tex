@@ -1,0 +1,170 @@
+%%%
+% CSSE lab template
+% Written March 28, 2011 by Tim Ekl
+%
+% This template is part of a template system; you should be generating a lab
+% using the newlab.sh file. Once you have generated the lab, feel free to
+% remove this comment.
+%
+% This lab has five TODO items that need to be completed manually after
+% generating the lab from template. Suggestions are provided with each TODO.
+%
+% For more info and examples of labs built from this template, see:
+% http://github.com/CSSE376/Labs (note you must be a 376 TA to access)
+%%%
+
+\documentclass{article}
+
+\newcommand{\labduedate}{at the end of week 5}
+
+\input{../common/header}
+
+\pagestyle{fancy}
+\headheight 24pt
+\begin{document}
+
+\chead{\textcolor{Gray}{CSSE491 -- Scalable Computing Lab Assignment}}
+\headsep = 24pt
+
+\begin{center}
+{ \large
+\textbf{Lab \labnumber: \longproductname} \\
+\textbf{Tags}
+}
+\end{center}
+
+\subsection*{Objective}
+% TODO: What is the objective of this lab? What should students be learning?
+
+\subsection*{Lab format}
+% TODO: What format is the lab in? Is it entirely written? Code-based? Are there auxiliary documents that supplement the lab (e.g. videos, code packages)?
+
+\subsection*{Required materials}
+% TODO: What do students need to complete the lab? (Common items include a laptop and an Internet connection.)
+Photos from \href{http://interfacelift.com}{interfacelift} in \verb!public/img/flickr-tmp!
+
+\subsection*{Grading rubric}
+\begin{tabular}{p{5.5in} r}
+  % TODO: Where are points coming from in this lab? (Usually this is the last section filled in, as it must be listed and totalled manually.)
+\end{tabular}
+
+\subsection*{Due date}
+The lab is due \textcolor{red}{\textbf{\labduedate}}.
+
+\input{../common/turnin}
+
+%%%
+% TODO: Content of the lab goes here! Recall you can use the following commands:
+%       \task{points}{Task Name}
+%       \question{points} Questionable question?
+%%%
+
+\task{0}{models.js}
+
+Update \verb!PhotoSchema! with
+\begin{minted}{javascript}
+, tags : [String]
+\end{minted}
+
+Update \verb!Photo.count(function(...! with 
+\begin{minted}{javascript}
+var TAGS = [
+  'foo',
+  'bar',
+  'baz',
+  'yolo',
+  'computers',
+  'cars',
+  'stuff',
+  'things'
+];
+\end{minted}
+(after \verb!var FOLDER = ...;!)
+and
+\begin{minted}{javascript}
+var j = 0;
+var n = Math.ceil(Math.random() * 5);
+while (j < n) {
+  var tag = TAGS[Math.round(Math.random() * (TAGS.length - 1))];
+  if (photo.tags.indexOf(tag) == -1) {
+    photo.tags.push(tag);
+  }
+  j++;
+}
+\end{minted}
+(after \verb!photo.likes = ...;!)
+
+\task{0}{app.js}
+
+Change
+\begin{minted}{javascript}
+app.get('/photos/:page', routes.photos.all);
+\end{minted}
+to
+\begin{minted}{javascript}
+app.get('/photos/:page/:tag?', routes.photos.all);
+\end{minted}
+
+\task{0}{routes/photos.js}
+
+Update \verb!exports.all = function(...! with
+\begin{minted}{javascript}
+  var tag = req.params.tag;
+  var query = {};
+  if (tag) {
+    query = {tags: {$in: [tag]}};
+  }
+\end{minted}
+(after \verb!var page = ...;!)
+and
+\begin{minted}{javascript}
+  options.sort = {description: 1};
+\end{minted}
+(after \verb!if (page == 0) {...}!)
+and
+\begin{minted}{javascript}
+    context.tag = tag;
+    if (tag) {
+      context.title += ' - ' + tag;
+    }
+\end{minted}
+(after \verb!context.title = ...;!)
+
+Change
+\begin{minted}{javascript}
+Photo.find({}, ['path', 'description'], ...);
+\end{minted}
+to
+\begin{minted}{javascript}
+Photo.find(query, ['path', 'description', 'tags'], ...);
+\end{minted}
+
+\task{0}{views/photos.jade}
+
+Add
+\begin{minted}{jade}
+ + (tag && ('/' + tag) || '')
+\end{minted}
+(after \verb!href='/photos/' + (page + 1)! and \verb!href='/photos/' + (page - 1)!)
+
+Add
+\begin{minted}{jade}
+  div.btn-group
+    each tag in center.tags
+      a.btn(href='/photos/all/' + tag)=tag
+  br
+\end{minted}
+(before \verb!div.alert.alert-info="..."!) 
+
+\verb!node app.js!
+
+\href{http://localhost:3000/photos}{http://localhost:3000/photos}
+
+\input{../common/turnin}
+
+\subsection*{Revision History}
+\begin{itemize*}
+ \item Sat Apr 14 16:13:11 EDT 2012: Lab created with template generator
+\end{itemize*}
+
+\end{document}

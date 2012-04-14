@@ -73,7 +73,6 @@ var PhotoSchema = new mongoose.Schema({
   , date : Date // timestamp
   , comments : [CommentSchema]
   , likes : Number
-  , tags : [String]
 });
 
 
@@ -83,16 +82,6 @@ var Photo = mongoose.model('Photo', PhotoSchema);
 Photo.count(function(err, c) {
   if (c == 0) {
     var FOLDER = 'public/img/flickr-tmp';
-    var TAGS = [
-      'foo',
-      'bar',
-      'baz',
-      'yolo',
-      'computers',
-      'cars',
-      'stuff',
-      'things'
-    ];
     fs.readdir(FOLDER, function(err, files) {
       for (var i in files) {
         var file = files[i];
@@ -101,15 +90,6 @@ Photo.count(function(err, c) {
         photo.description = file.split('.')[0];
         photo.date = new Date();
         photo.likes = 0;
-        var j = 0;
-        var n = Math.ceil(Math.random() * 5);
-        while (j < n) {
-          var tag = TAGS[Math.round(Math.random() * (TAGS.length - 1))];
-          if (photo.tags.indexOf(tag) == -1) {
-            photo.tags.push(tag);
-          }
-          j++;
-        }
         photo.save();
       }
     });
@@ -126,7 +106,7 @@ exports.Photo = Photo;
 routes.photos = require('./routes/photos.js');
 
 
-app.get('/photos/:page/:tag?', routes.photos.all);
+app.get('/photos/:page', routes.photos.all);
 \end{minted}
 
 \task{0}{routes/photos.js}
@@ -136,19 +116,13 @@ var Photo = require('../models').Photo;
 
 exports.all = function(req, res) {
   var page = parseInt(req.params.page) || 0; // :page or all (first page)
-  var tag = req.params.tag;
-  var query = {};
-  if (tag) {
-    query = {tags: {$in: [tag]}};
-  }
   var options;
   if (page == 0) { // first page is a special case
     options = {limit: 2};
   } else {
     options = {skip: page - 1, limit: 3};
   }
-  options.sort = {description: 1};
-  Photo.find(query, ['path', 'description', 'tags'], options, function(err, photos) {
+  Photo.find({}, ['path', 'description'], options, function(err, photos) {
     var n = photos.length;
     var context;
     if (n == 0) {
@@ -164,12 +138,8 @@ exports.all = function(req, res) {
     } else if (n == 3) {
       context = {'left': photos[0], 'center': photos[1], 'right': photos[2]};
     }
-    context.tag = tag;
     context.page = page;
     context.title = 'Photos';
-    if (tag) {
-      context.title += ' - ' + tag;
-    }
     context.stylesheet = 'photos.css';
     res.render('photos', context);
   });
@@ -183,7 +153,7 @@ if center
   .row
     .span2
       if left
-        a(href='/photos/' + (page - 1) + (tag && ('/' + tag) || ''))
+        a(href='/photos/' + (page - 1))
           img(src=left.path, alt=left.description)
       else
         &nbsp;
@@ -192,14 +162,10 @@ if center
         img(src=center.path, alt=center.description)
     .span2.offset1
       if right
-        a(href='/photos/' + (page + 1) + (tag && ('/' + tag) || ''))
+        a(href='/photos/' + (page + 1))
           img(src=right.path, alt=right.description)
       else
         &nbsp;
-  br
-  div.btn-group
-    each tag in center.tags
-      a.btn(href='/photos/all/' + tag)=tag
   br
 div.alert.alert-info="All photos licensed by InterfaceLIFT.com for personal use only."
 \end{minted}
