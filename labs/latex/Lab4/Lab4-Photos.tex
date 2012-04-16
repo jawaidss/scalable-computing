@@ -34,18 +34,27 @@
 \end{center}
 
 \subsection*{Objective}
-% TODO: What is the objective of this lab? What should students be learning?
+This lab continues to build on the HelloWorld example from previous labs, and is meant to demonstrate how Node.js apps can provide ``real-world'' functionality to web applications. By the end of this lab, students should have their HelloWorld app hosting photos.
 
 \subsection*{Lab format}
-% TODO: What format is the lab in? Is it entirely written? Code-based? Are there auxiliary documents that supplement the lab (e.g. videos, code packages)?
+Like previous labs, this lab primarily guides students through the process of adding photos, with comprehension questions placed throughout.
 
 \subsection*{Required materials}
-% TODO: What do students need to complete the lab? (Common items include a laptop and an Internet connection.)
-Photos from \href{http://interfacelift.com}{interfacelift} in \verb!public/img/flickr-tmp!
+Students will need:
+\begin{itemize*}
+\item Their completed HelloWorld app from the end of Lab 3
+\item A laptop with an internet connection
+\item Photos from \href{http://interfacelift.com}{interfacelift} in \verb!public/img/interfacelift!
+\end{itemize*}
+
 
 \subsection*{Grading rubric}
 \begin{tabular}{p{5.5in} r}
-  % TODO: Where are points coming from in this lab? (Usually this is the last section filled in, as it must be listed and totalled manually.)
+Task 1 is worth \textbf{5} points. & $1 \times 5 = 5$ \\
+Tasks 2-4 are worth \textbf{10} points each. & $3 \times 10 = 30$ \\
+Questions 1-5 are worth \textbf{5} points each. & $5 \times 5 = 25$ \\
+Question 6 is worth \textbf{10} points. & $1 \times 10 = 10$ \\ \hline
+& \textbf{70} points
 \end{tabular}
 
 \subsection*{Due date}
@@ -53,35 +62,22 @@ The lab is due \textcolor{red}{\textbf{\labduedate}}.
 
 \input{../common/turnin}
 
-%%%
-% TODO: Content of the lab goes here! Recall you can use the following commands:
-%       \task{points}{Task Name}
-%       \question{points} Questionable question?
-%%%
+\task{5}{Update the Model}
 
-\task{0}{models.js}
+As in all new data entities, we first need to modify the model to provide information about the Photo type. Open \verb!models.js! and add:
 
 \begin{minted}{javascript}
-var CommentSchema = new mongoose.Schema({
-    text : String
-  , date : Date // timestamp
-});
-
 var PhotoSchema = new mongoose.Schema({
     path : String // src
   , description : String // alt
   , date : Date // timestamp
-  , comments : [CommentSchema]
-  , likes : Number
 });
-
 
 var Photo = mongoose.model('Photo', PhotoSchema);
 
-
 Photo.count(function(err, c) {
   if (c == 0) {
-    var FOLDER = 'public/img/flickr-tmp';
+    var FOLDER = 'public/img/interfacelift';
     fs.readdir(FOLDER, function(err, files) {
       for (var i in files) {
         var file = files[i];
@@ -89,27 +85,30 @@ Photo.count(function(err, c) {
         photo.path = FOLDER.replace(FOLDER.split('/')[0], '') + '/' + file;
         photo.description = file.split('.')[0];
         photo.date = new Date();
-        photo.likes = 0;
         photo.save();
       }
     });
   }
 });
 
-
 exports.Photo = Photo;
 \end{minted}
 
-\task{0}{app.js}
+\question{5} When we store a Photo, what is stored in the database? What is stored on disk? Why do we make this tradeoff?
+
+\question{5} Explain, in your own words, what the block beginning \verb!Photo.count...! does.
+
+\task{10}{Adding Routes}
+
+Now that our database understands photos, we need to expose an interface to users of our website to view those photos. Add to \verb!app.js!:
 
 \begin{minted}{javascript}
 routes.photos = require('./routes/photos.js');
 
-
 app.get('/photos/:page', routes.photos.all);
 \end{minted}
 
-\task{0}{routes/photos.js}
+Now, open \verb!routes/photos.js! and add the following route:
 
 \begin{minted}{javascript}
 var Photo = require('../models').Photo;
@@ -146,7 +145,13 @@ exports.all = function(req, res) {
 };
 \end{minted}
 
-\task{0}{views/photos.jade}
+\question{5} Can you think of a way to shorten the large \verb!if! block in the middle of this route?
+
+\question{5} What will the value of the variable \verb!page! be if a user accesses the route \verb!/photos/all!? \verb!/photos/2!? \verb!/photos/null!?
+
+\task{10}{Adding a View}
+
+You'll notice that the end of the route from the previous task attempts to render a nonexistent page. Let's go ahead and create that page now. Open the file \verb!views/photos.jade! and insert:
 
 \begin{minted}{jade}
 if center
@@ -170,15 +175,28 @@ if center
 div.alert.alert-info="All photos licensed by InterfaceLIFT.com for personal use only."
 \end{minted}
 
+\question{5} Does this view correctly handle edge cases for values of the \verb!page! variable? If not, how does it break?
+
+\subsection*{Running the App}
+
+As always, run the app (and check new functionality) by running:
+
 \verb!node app.js!
 
-\href{http://localhost:3000/photos}{http://localhost:3000/photos}
+Then access the app at \href{http://localhost:3000/photos}{http://localhost:3000/photos}.
+
+\task{10}{Refactoring}
+
+If you identified any issues in the process of answering the questions above, fix them in the app. Be sure to \textbf{commit your changes separately} from any code from other tasks.
+
+\question{10} What did you change? Why?
 
 \input{../common/turnin}
 
 \subsection*{Revision History}
 \begin{itemize*}
- \item Sat Apr 14 15:35:06 EDT 2012: Lab created with template generator
+\item April 14, 2012: Lab written by Samad Jawaid
+\item April 16, 2012: Lab questions and instructions filled out by Tim Ekl
 \end{itemize*}
 
 \end{document}
