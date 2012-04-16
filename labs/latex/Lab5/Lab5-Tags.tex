@@ -34,18 +34,25 @@
 \end{center}
 
 \subsection*{Objective}
-% TODO: What is the objective of this lab? What should students be learning?
+The objective of this lab is to expose students to one of the most important facets of scalable computing: search. By adding tags to photos stored in the HelloWorld app from Lab 4, this lab aims to explore search implementations in Node.js across large databases -- a key concept in scalable systems.
 
 \subsection*{Lab format}
-% TODO: What format is the lab in? Is it entirely written? Code-based? Are there auxiliary documents that supplement the lab (e.g. videos, code packages)?
+This lab, like most previous labs, is largely guided. However, it will require students to answer a number of comprehension questions, some of which may require independent research. There is also a small independent coding portion near the end of the lab.
 
 \subsection*{Required materials}
-% TODO: What do students need to complete the lab? (Common items include a laptop and an Internet connection.)
-Photos from \href{http://interfacelift.com}{interfacelift} in \verb!public/img/flickr-tmp!
+Students will need:
+\begin{itemize*}
+\item The HelloWorld app from Lab 4
+\item A laptop with an Internet connection
+\item Photos from \href{http://interfacelift.com}{interfacelift} in \verb!public/img/interfacelift!
+\end{itemize*}
 
 \subsection*{Grading rubric}
 \begin{tabular}{p{5.5in} r}
-  % TODO: Where are points coming from in this lab? (Usually this is the last section filled in, as it must be listed and totalled manually.)
+Tasks 1 and 3 are worth \textbf{5} points each & $2 \times 5 = 10$ \\
+Task 2 is worth \textbf{10} points & $1 \times 10 = 10$ \\
+Questions 1-3 are worth \textbf{5} points each & $3 \times 5 = 15$ \\ \hline
+& \textbf{35} points
 \end{tabular}
 
 \subsection*{Due date}
@@ -53,34 +60,22 @@ The lab is due \textcolor{red}{\textbf{\labduedate}}.
 
 \input{../common/turnin}
 
-%%%
-% TODO: Content of the lab goes here! Recall you can use the following commands:
-%       \task{points}{Task Name}
-%       \question{points} Questionable question?
-%%%
+\task{5}{Update the Model}
 
-\task{0}{models.js}
+Open the file \verb!models.js!, and make the following changes:
 
-Update \verb!PhotoSchema! with
+\begin{itemize*}
+\item Add an attribute called \verb!tags! to the PhotoSchema definition of type String
+\item In the function beginning \verb!Photo.count(function(...!, add the following:
+\begin{itemize*}
+\item A list of tags after the definition \verb!var FOLDER...!. This list should take the form:
+
 \begin{minted}{javascript}
-, tags : [String]
+var TAGS = ['foo', 'bar', 'your', 'tags', 'here'];
 \end{minted}
 
-Update \verb!Photo.count(function(...! with 
-\begin{minted}{javascript}
-var TAGS = [
-  'foo',
-  'bar',
-  'baz',
-  'yolo',
-  'computers',
-  'cars',
-  'stuff',
-  'things'
-];
-\end{minted}
-(after \verb!var FOLDER = ...;!)
-and
+\item The following code block in the set of lines containing \verb!photo.path = ...!:
+
 \begin{minted}{javascript}
 var j = 0;
 var n = Math.ceil(Math.random() * 5);
@@ -92,22 +87,31 @@ while (j < n) {
   j++;
 }
 \end{minted}
-(after \verb!photo.likes = ...;!)
+\end{itemize*}
+\end{itemize*}
 
-\task{0}{app.js}
+\question{5} Explain, in your own words, what the new code block in the last bullet point above does.
 
-Change
+\task{10}{Routing}
+
+In the file \verb!app.js!, change:
+
 \begin{minted}{javascript}
 app.get('/photos/:page', routes.photos.all);
 \end{minted}
+
 to
+
 \begin{minted}{javascript}
 app.get('/photos/:page/:tag?', routes.photos.all);
 \end{minted}
 
-\task{0}{routes/photos.js}
+\question{5} We know that the colon indicates a route parameter; what do you think the question mark (e.g. \verb!:tag?!) indicates? Feel free to refer to Node.js or Express documentation.
 
-Update \verb!exports.all = function(...! with
+Once the app is updated, edit the route it refers to. Open the file \verb!routes/photos.js! and make the following changes:
+
+\begin{itemize}
+\item Update \verb!exports.all = function(...! (after \verb!var page = ...;!) with:
 \begin{minted}{javascript}
   var tag = req.params.tag;
   var query = {};
@@ -115,22 +119,23 @@ Update \verb!exports.all = function(...! with
     query = {tags: {$in: [tag]}};
   }
 \end{minted}
-(after \verb!var page = ...;!)
-and
+
+\item Update the same function (after \verb!if (page == 0) {...}!) with:
+
 \begin{minted}{javascript}
   options.sort = {description: 1};
 \end{minted}
-(after \verb!if (page == 0) {...}!)
-and
+
+\item Update the same function (after \verb!context.title = ...;!) with:
+
 \begin{minted}{javascript}
     context.tag = tag;
     if (tag) {
       context.title += ' - ' + tag;
     }
 \end{minted}
-(after \verb!context.title = ...;!)
 
-Change
+\item Finally, change
 \begin{minted}{javascript}
 Photo.find({}, ['path', 'description'], ...);
 \end{minted}
@@ -138,27 +143,42 @@ to
 \begin{minted}{javascript}
 Photo.find(query, ['path', 'description', 'tags'], ...);
 \end{minted}
+\end{itemize}
 
-\task{0}{views/photos.jade}
+\question{5} Describe, in your own words, what the updates listed above do.
 
-Add
+\task{5}{Update the View}
+
+So what's the desired user interface for tags? They should, at a minimum:
+
+\begin{itemize*}
+\item Be displayed below their respective photos
+\item Link to result sets for the same tag
+\end{itemize*}
+
+To accomplish this, open \verb!views/photos.jade!. Add (after both \verb!href='/photos/' + (page + 1)! and \verb!href='/photos/' + (page - 1)!):
+
 \begin{minted}{jade}
  + (tag && ('/' + tag) || '')
 \end{minted}
-(after \verb!href='/photos/' + (page + 1)! and \verb!href='/photos/' + (page - 1)!)
 
-Add
+Also, add (before \verb!div.alert.alert-info="..."!):
+
 \begin{minted}{jade}
   div.btn-group
     each tag in center.tags
       a.btn(href='/photos/all/' + tag)=tag
   br
 \end{minted}
-(before \verb!div.alert.alert-info="..."!) 
 
-\verb!node app.js!
+\subsection*{Run the App}
 
-\href{http://localhost:3000/photos}{http://localhost:3000/photos}
+Like always, test with:
+
+\begin{itemize*}
+\item \verb!node app.js!
+\item \href{http://localhost:3000/photos}{http://localhost:3000/photos}
+\end{itemize*}
 
 \input{../common/turnin}
 
