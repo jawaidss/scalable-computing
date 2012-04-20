@@ -1,0 +1,146 @@
+%%%
+% CSSE lab template
+% Written March 28, 2011 by Tim Ekl
+%
+% This template is part of a template system; you should be generating a lab
+% using the newlab.sh file. Once you have generated the lab, feel free to
+% remove this comment.
+%
+% This lab has five TODO items that need to be completed manually after
+% generating the lab from template. Suggestions are provided with each TODO.
+%
+% For more info and examples of labs built from this template, see:
+% http://github.com/CSSE376/Labs (note you must be a 376 TA to access)
+%%%
+
+\documentclass{article}
+
+\newcommand{\labduedate}{at the end of Week 6}
+
+\input{../common/header}
+
+\pagestyle{fancy}
+\headheight 24pt
+\begin{document}
+
+\chead{\textcolor{Gray}{CSSE491 -- Scalable Computing Lab Assignment}}
+\headsep = 24pt
+
+\begin{center}
+{ \large
+\textbf{Lab \labnumber: \longproductname} \\
+\textbf{Amazon EC2}
+}
+\end{center}
+
+\subsection*{Objective}
+% TODO: What is the objective of this lab? What should students be learning?
+
+\subsection*{Lab format}
+% TODO: What format is the lab in? Is it entirely written? Code-based? Are there auxiliary documents that supplement the lab (e.g. videos, code packages)?
+
+\subsection*{Required materials}
+% TODO: What do students need to complete the lab? (Common items include a laptop and an Internet connection.)
+
+\subsection*{Grading rubric}
+\begin{tabular}{p{5.5in} r}
+  % TODO: Where are points coming from in this lab? (Usually this is the last section filled in, as it must be listed and totalled manually.)
+\end{tabular}
+
+\subsection*{Due date}
+The lab is due \textcolor{red}{\textbf{\labduedate}}.
+
+\input{../common/turnin}
+
+\task{5}{Sign Up for AWS}
+
+Before we get started, you'll need a free account with AWS. Do the following:
+
+\begin{enumerate*}
+\item http://aws.amazon.com/free/
+\item Click 'Sign Up Now'
+\item Log in with an Amazon account, or put in your email and choose 'I am a new user.'
+\item Follow the wizard to create your account
+\end{enumerate*}
+
+\task{5}{Creating a new Elastic Compute Cloud (EC2) instance}
+
+Start at the URL \href{https://console.aws.amazon.com}{https://console.aws.amazon.com}. Do the following:
+
+\begin{enumerate*}
+\item Click the 'Amazon EC2' tab
+\item Click 'Instances' on the left sidebar
+\item Click 'Launch Instance' on the top toolbar
+\item Use the Quick Launch Wizard
+\end{enumerate*}
+
+\subsubsection*{Screen 1}
+
+\begin{enumerate*}
+\item Name Your Instance: Be creative. Or don't. But name it something
+\item Choose a Key Pair: Use an existing pair if you've created one. Otherwise use Create New with Name: your username. Let the key download and remember where it is.
+\item Choose a Launch Configuration: Use a modern version of 64-bit Ubuntu Server, preferably one that matches your local configuration.
+\item Click 'Continue'.
+\end{enumerate*}
+
+\subsubsection*{Screen 2}
+
+Simply click 'Edit details'
+
+\subsubsection*{Screen 3}
+
+\begin{enumerate*}
+\item Instance Details
+\begin{enumerate*}
+\item Type: t1.micro. Unless you want to actually owe Amazon money
+\end{enumerate*}
+\item Security Settings - Click 'Create new Security Group'
+\begin{enumerate*}
+\item Group name/Description: Your call.
+\item New rules
+\begin{enumerate*}
+\item Create a new rule: SSH, HTTP, Custom TCP Rule
+\item Port range: n/a, n/a, 3000
+\item Source: 0.0.0.0/0
+\end{enumerate*}
+\item Click 'Create'
+\end{enumerate*}
+\item Click 'Save details'
+\end{enumerate*}
+
+\subsubsection*{Screen 4}
+
+Click 'Launch'
+
+\task{5}{Pairing the Instance}
+
+In this section, we discuss pairing your new EC2 instance with an Elastic IP. Again starting from \href{https://console.aws.amazon.com}{https://console.aws.amazon.com}, do the following:
+
+\begin{enumerate*}
+\item Click the 'Amazon EC2' tab
+\item Click 'Elastic IPs' on the left sidebar
+\item Click 'Allocate New Address' on the top toolbar
+\item Click 'Yes, Allocate'
+\item Check the box of your new Elastic IP and click 'Associate Address'
+\begin{enumerate*}
+\item Instance: Select your new EC2 instance.
+\item Click 'Yes, Associate'
+\end{enumerate*}
+\end{enumerate*}
+
+\task{5}{Connecting to the Instance}
+
+Fire up a shell with SSH, and run:
+
+\begin{verbatim}
+$ ssh -i <key pair name>.pem ubuntu@<your elastic IP>
+\end{verbatim}
+
+\input{../common/turnin}
+
+\subsection*{Revision History}
+\begin{itemize*}
+ \item Fri Apr 20 10:29:39 EDT 2012: Lab created with template generator
+\end{itemize*}
+
+\end{document}
