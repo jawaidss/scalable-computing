@@ -58,8 +58,8 @@ Before we get started, you'll need a free account with AWS. Do the following:
 
 \begin{enumerate*}
 \item http://aws.amazon.com/free/
-\item Click 'Sign Up Now'
-\item Log in with an Amazon account, or put in your email and choose 'I am a new user.'
+\item Click `Sign Up Now'
+\item Log in with an Amazon account, or put in your email and choose `I am a new user.'
 \item Follow the wizard to create your account
 \end{enumerate*}
 
@@ -68,33 +68,39 @@ Before we get started, you'll need a free account with AWS. Do the following:
 Start at the URL \href{https://console.aws.amazon.com}{https://console.aws.amazon.com}. Do the following:
 
 \begin{enumerate*}
-\item Click the 'Amazon EC2' tab
-\item Click 'Instances' on the left sidebar
-\item Click 'Launch Instance' on the top toolbar
+\item Click the `Amazon EC2' tab
+\item Click `Instances' on the left sidebar
+\item Click `Launch Instance' on the top toolbar
 \item Use the Quick Launch Wizard
 \end{enumerate*}
 
 \subsubsection*{Screen 1}
 
+\includegraphics[width=6in]{screen1}
+
 \begin{enumerate*}
 \item Name Your Instance: Be creative. Or don't. But name it something
 \item Choose a Key Pair: Use an existing pair if you've created one. Otherwise use Create New with Name: your username. Let the key download and remember where it is.
 \item Choose a Launch Configuration: Use a modern version of 64-bit Ubuntu Server, preferably one that matches your local configuration.
-\item Click 'Continue'.
+\item Click `Continue'.
 \end{enumerate*}
 
 \subsubsection*{Screen 2}
 
-Simply click 'Edit details'
+\includegraphics[width=6in]{screen2}
+
+Simply click `Edit details'
 
 \subsubsection*{Screen 3}
+
+\includegraphics[width=6in]{screen3}
 
 \begin{enumerate*}
 \item Instance Details
 \begin{enumerate*}
 \item Type: t1.micro. Unless you want to actually owe Amazon money
 \end{enumerate*}
-\item Security Settings - Click 'Create new Security Group'
+\item Security Settings - Click `Create new Security Group'
 \begin{enumerate*}
 \item Group name/Description: Your call.
 \item New rules
@@ -103,28 +109,28 @@ Simply click 'Edit details'
 \item Port range: n/a, n/a, 3000
 \item Source: 0.0.0.0/0
 \end{enumerate*}
-\item Click 'Create'
+\item Click `Create'
 \end{enumerate*}
-\item Click 'Save details'
+\item Click `Save details'
 \end{enumerate*}
 
 \subsubsection*{Screen 4}
 
-Click 'Launch'
+Click `Launch'
 
 \task{5}{Pairing the Instance}
 
 In this section, we discuss pairing your new EC2 instance with an Elastic IP. Again starting from \href{https://console.aws.amazon.com}{https://console.aws.amazon.com}, do the following:
 
 \begin{enumerate*}
-\item Click the 'Amazon EC2' tab
-\item Click 'Elastic IPs' on the left sidebar
-\item Click 'Allocate New Address' on the top toolbar
-\item Click 'Yes, Allocate'
-\item Check the box of your new Elastic IP and click 'Associate Address'
+\item Click the `Amazon EC2' tab
+\item Click `Elastic IPs' on the left sidebar
+\item Click `Allocate New Address' on the top toolbar
+\item Click `Yes, Allocate'
+\item Check the box of your new Elastic IP and click `Associate Address'
 \begin{enumerate*}
 \item Instance: Select your new EC2 instance.
-\item Click 'Yes, Associate'
+\item Click `Yes, Associate'
 \end{enumerate*}
 \end{enumerate*}
 
