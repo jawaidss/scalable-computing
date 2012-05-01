@@ -1,0 +1,113 @@
+\documentclass{article}
+
+\newcommand{\labduedate}{at the end of Week 7}
+
+\input{../common/header}
+
+\pagestyle{fancy}
+\headheight 24pt
+\begin{document}
+
+\chead{\textcolor{Gray}{CSSE491 -- Scalable Computing Lab Assignment}}
+\headsep = 24pt
+
+\begin{center}
+{ \large
+\textbf{Lab \labnumber: \longproductname} \\
+\textbf{Windows Azure}
+}
+\end{center}
+
+\subsection*{Objective}
+This lab is meant to introduce students to a major competitor in the cloud computing space: the Windows Azure platform. By the end of the lab, students should have a working knowledge of configuring an Azure node with an application, and should be ready to expand that application using techniques learned in previous labs.
+
+\subsection*{Lab format}
+This lab is primarily guided; it walks students through the process of getting started deploying Node.js apps on Windows Azure, up to the point of having a working application on the platform. Students also have the option of working on an independent extra credit assignment.
+
+\subsection*{Required materials}
+Students will need a laptop, an Internet connection, and a Windows Live account (to register for the Azure service). \textbf{Note:} students should expect a wait of 2-3 business days to get an Azure account fully activated. Please consider starting this lab early.
+
+\subsection*{Grading rubric}
+\begin{tabular}{p{5.5in} r}
+Tasks 1 and 2 are worth \textbf{5} points each. & $2 \times 5 = 10$ \\
+Tasks 3 and 4 are worth \textbf{15} points each. & $2 \times 15 = 30$ \\
+Question 1 is worth \textbf{5} points each. & $1 \times 5 = 5$ \\ \hline
+& \textbf{45} points
+\end{tabular}
+
+\subsection*{Due date}
+The lab is due \textcolor{red}{\textbf{\labduedate}}.
+
+\input{../common/turnin}
+
+\task{5}{Set up your Azure account}
+
+\begin{enumerate}
+\item Go to \href{http://www.WindowsAzurePass.com/Academic}{the Azure Academic page}.
+\item Sign in with a Windows Live ID (create one if neccessary).
+\item Select United States, enter the code your instructor gave you, and click Submit.
+\item Complete the registration process, filling in the requested information.
+\item Accept the Terms of Use.
+\end{enumerate}
+
+Your new account will be activated within 3 business days.
+
+\task{5}{Install Node.js tools}
+
+Installing software on an Azure node is relatively simple; starting from \href{http://www.windowsazure.com/en-us/develop/nodejs/}{the Azure development page}, click the ``Install'' button. Restart your machine if necessary.
+
+\task{15}{Create a simple Node.js application}
+
+\begin{enumerate}
+\item Open Windows Azure PowerShell for Node.js as an Administrator (hold Ctrl+Shift before hitting Enter, or right click and choose Run as Administrator).
+\item Create a new directory for Azure solutions somewhere on your hard drive (\verb!C:\Azure! is recommended). Type:
+\begin{verbatim}
+mkdir Azure
+cd Azure
+\end{verbatim}
+\item In that folder, create a new Azure solution:
+\begin{verbatim}
+New-AzureService scalable-computing
+\end{verbatim}
+\item Create a new Azure web role (this is the root of your Node app):
+\begin{verbatim}
+Add-AzureNodeWebRole scale1
+\end{verbatim}
+\end{enumerate}
+
+\question{5} In the new \verb!scale1! directory, examine \verb!server.js! (equivalent to \verb!app.js! from previous labs). What's different between the HelloWorld app on \href{http://nodejs.org}{nodejs.org} and the contents of \verb!server.js!? Why do you think Azure makes those changes? (Hint: you can find these answers on the tutorials \href{http://www.windowsazure.com/en-us/develop/nodejs/}{online}).
+
+Once you've set up your Azure Node.js application, run the application locally. Open the Azure Compute Emulator and launch a browser when the initialization has finished, then type:
+
+\begin{verbatim}
+Start-AzureEmulator -launch
+\end{verbatim}
+
+\task{15}{Deploy the application to Azure}
+
+\begin{enumerate}
+\item Get the publishing settings for your account. Type \verb!Get-AzurePublishSettings!, log into your account if you're not already, and save the file to your Azure directory (e.g. \verb!C:\Azure!).
+\item Import the publishing settings. Type:
+\begin{verbatim}
+Import-AzurePublishSettings C:\Azure\[name].publishSettings
+\end{verbatim}
+\item Publish your application and launch a browser when the initialization has finished.
+\begin{enumerate}
+\item The name for your service must be unique; it's the hostname through which you'll access your app.
+\item Publish-AzureService -name [username]-scalable-computing -location "North Central US" -launch
+\item This can take 5-7 minutes. From the Azure tutorials: "Since this is the first time you are publishing, Windows Azure provisions a virtual machine (VM), performs security hardening, creates a web role on the VM to host your application, deploys your code to that web role, and finally configures the load balancer and networking so you application is available to the public."
+\end{enumerate}
+\end{enumerate}
+
+\subsection*{Extra Credit}
+
+You may earn extra credit for this lab by adapting the HelloWorld application from earlier labs to work on your Windows Azure account.
+
+\input{../common/turnin}
+
+\subsection*{Revision History}
+\begin{itemize*}
+\item Tue May  1 10:05:16 EDT 2012: Lab written by Alex Mullans, Samad Jawaid, and Tim Ekl
+\end{itemize*}
+
+\end{document}
